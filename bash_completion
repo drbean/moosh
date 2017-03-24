@@ -1,4 +1,4 @@
-_moosh() 
+_Moosh() 
 {
     local cur prev opts
     COMPREPLY=()
@@ -87,4 +87,4 @@ _moosh()
         return 0
     fi
 }
-complete -F _moosh moosh
+complete -F _Moosh Moosh
