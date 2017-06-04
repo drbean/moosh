@@ -64,6 +64,7 @@ _Moosh()
          module-config \
          module-manage \
          module-reinstall \
+	 question-import \
          role-create \
          role-delete \
          role-update-capability \
