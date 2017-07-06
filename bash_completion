@@ -10,6 +10,7 @@ _Moosh()
          report-concurrency \
          cohort-unenrol \
          activity-add \
+         activity-delete \
          block-manage \
          category-create \
          category-list \
