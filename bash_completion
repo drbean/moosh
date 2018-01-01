@@ -15,6 +15,7 @@ _Moosh()
          category-create \
          category-list \
          category-move \
+         category-delete \
          cohort-create \
          cohort-enrol \
          config-get \
@@ -84,6 +85,7 @@ _Moosh()
          generate-moosh \
          apachelog-parse \
          perflog-parse \
+         plugins-usage \
          download-moodle"
 
     if [[ ${cur} == * ]] ; then
