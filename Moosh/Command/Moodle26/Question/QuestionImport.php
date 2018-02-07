@@ -43,6 +43,8 @@ class QuestionImport extends MooshCommand
         if (!$category = $DB->get_record('question_categories',array('contextid'=>$coursecontext->id))) {
             $category = question_make_default_categories($contexts->all());
         }
+	$category->contextid = $coursecontext->id;
+	$category->id = 1185;
 
         $formatfile = $CFG->dirroot .  '/question/format/xml/format.php';
         if (!is_readable($formatfile)) {
