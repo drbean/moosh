@@ -1095,6 +1095,16 @@ Creates new local plugin for WS development based on moodlehq/moodle-local_wstem
     moosh generate-ws newws
 
 
+<span class="anchor" id="gradecategory-create"></span>
+<a class="command-name">gradecategory-create</a>
+---------------
+
+Creates grade category.
+
+Example:
+
+    moosh gradecategory-create -n category-name -a aggregation parent_id course_id
+
 <span class="anchor" id="gradebook-import"></span>
 <a class="command-name">gradebook-import</a>
 ---------------
