@@ -27,6 +27,7 @@ class ActivityAdd extends MooshCommand
         $this->addOption('s|section:', 'section number', '1');
         $this->addOption('i|idnumber:', 'idnumber', null);
         $this->addOption('g|grade:', 'grade', 9);
+        $this->addOption('g|gradecategory', 'grade category', null);
         $this->addOption('v|overduehandling:', 'overduehandling', 'autosubmit');
         $this->addOption('o|options:', 'any options that should be passed for activity creation', null);
 
@@ -66,6 +67,9 @@ class ActivityAdd extends MooshCommand
         }
         if (!empty($options['idnumber'])) {
             $moduledata->idnumber = $options['idnumber'];
+        }
+        if (!empty($options['gradecategory'])) {
+            $moduledata->gradecategory = $options['gradecategory'];
         }
 	$moduledata->grade = $options['grade'];
 	$moduledata->overduehandling = $options['overduehandling'];
