@@ -34,7 +34,9 @@ class GroupList extends MooshCommand {
         }
 
         foreach ($this->arguments as $courseid) {
-            echo "\t\tcourseid: $courseid\n";
+            if (empty($options["id"])) {
+                echo "\t\tcourseid: $courseid\n";
+            }
             if (!empty($options["groupingid"])) {
                 $id = $options["groupingid"];
                 $groupings = $DB->get_records('groupings', array('id'=>$id) );
@@ -43,12 +45,19 @@ class GroupList extends MooshCommand {
                 $groupings = $DB->get_records('groupings', array('courseid'=>$courseid) );
             }
             foreach ($groupings as $grouping) {
-                echo "grouping " . $grouping->id . " \"" . $grouping->name . "\" " . $grouping->description . "\n";
+                if (empty($options["id"])) {
+                    echo "grouping " . $grouping->id . " \"" . $grouping->name . "\" " . $grouping->description . "\n";
+                }
                 $grouping_groups = $DB->get_records('groupings_groups', array('groupingid'=>$grouping->id) );
                 foreach ($grouping_groups as $grouping_group) {
                     $groups = $DB->get_records('groups', array('id'=>$grouping_group->groupid) );
                     foreach ($groups as $group) {
-                    echo "\tgroup " . $group->id . " \"" . $group->name . "\" " . $group->description . "\n";
+                        if (!empty($options["id"])) {
+                            echo $group->id . "\n";
+                            }
+                        else {
+                            echo "\tgroup " . $group->id . " \"" . $group->name . "\" " . $group->description . "\n";
+                        }
                     }
                 }
             }
