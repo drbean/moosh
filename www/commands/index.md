@@ -1135,6 +1135,21 @@ Example 1:
     moosh group-create --description "group description" --key sesame --id "group idnumber" groupname courseid
 
 
+<span class="anchor" id="group-list"></span>
+<a class="command-name">group-list</a>
+-------------
+
+Lists groups in course, or grouping.
+
+Example 1:
+
+    moosh group-list courseid
+
+Example 2:
+
+    moosh group-list --id -G groupingid courseid
+
+
 <span class="anchor" id="group-memberadd"></span>
 <a class="command-name">group-memberadd</a>
 -------------
