@@ -27,9 +27,10 @@ class ActivityAdd extends MooshCommand
         $this->addOption('s|section:', 'section number', '1');
         $this->addOption('i|idnumber:', 'idnumber', null);
         $this->addOption('g|grade:', 'grade', 9);
-        $this->addOption('g|gradecategory', 'grade category', null);
+        $this->addOption('G|gradecategory', 'grade category', null);
         $this->addOption('v|overduehandling:', 'overduehandling', 'autosubmit');
         $this->addOption('a|accessiblity:', 'accessiblity or availability?', null);
+	$this->addOption('c|content:', 'content: not available in all modules', null);
         $this->addOption('o|options:', 'any options that should be passed for activity creation', null);
 
         $this->addArgument('activitytype');
@@ -74,6 +75,9 @@ class ActivityAdd extends MooshCommand
         }
         if (!empty($options['accessiblity'])) {
             $moduledata->availability = $options['accessiblity'];
+        }
+        if (!empty($options['content'])) {
+            $moduledata->content = $options['content'];
         }
 	$moduledata->grade = $options['grade'];
 	$moduledata->overduehandling = $options['overduehandling'];
