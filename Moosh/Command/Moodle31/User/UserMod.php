@@ -21,6 +21,7 @@ class UserMod extends MooshCommand
         $this->addOption('a|auth:', 'auth');
         $this->addOption('p|password:', 'password');
         $this->addOption('e|email:','email address');
+        $this->addOption('f|firstname:','user firstname');
 
         $this->addOption('g|global', 'user(s) to be set as global admin.', false);
         $this->addOption('n|ignorepolicy', 'ignore password policy.', false);
@@ -53,6 +54,10 @@ class UserMod extends MooshCommand
             $sqlFragment = array();
             $parameters = array();
             //we want to use the options that were actually provided on the commandline
+            if($this->parsedOptions->has('firstname')) {
+                $sqlFragment[] = 'firstname = ?';
+                $parameters['firstname'] = $this->parsedOptions['firstname']->value;
+            }
             if($this->parsedOptions->has('password')) {
                 require_once($CFG->libdir . '/moodlelib.php');
                 $sqlFragment[] = 'password = ?';
@@ -88,6 +93,9 @@ class UserMod extends MooshCommand
                 continue;
             }
 
+            if($this->parsedOptions->has('firstname')) {
+                $user->firstname = $this->parsedOptions['firstname']->value;
+            }
             if($this->parsedOptions->has('password')) {
                 require_once($CFG->libdir . '/moodlelib.php');
                 $user->password = hash_internal_user_password($this->parsedOptions['password']->value);
