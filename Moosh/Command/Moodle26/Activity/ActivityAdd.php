@@ -10,6 +10,9 @@
 namespace Moosh\Command\Moodle26\Activity;
 use Moosh\MooshCommand;
 
+use GetOptionKit\ContinuousOptionParser;
+use GetOptionKit\OptionCollection;
+
 /**
  * Adds a new activity to the specified course
  *
@@ -58,6 +61,25 @@ class ActivityAdd extends MooshCommand
 
         // $options are course module options.
         $options = $this->expandedOptions;
+
+        if (!empty($options['options'])) {
+		$appspecs = new OptionCollection;
+		$options_array = explode( ' ', $options['options']);
+		foreach ( $options_array as $option ) {
+			if ( preg_match( '/^--/', $option ) ) {
+				$option = substr( $option, 2 );
+				list( $name, $value ) = explode( "=", $option );
+				$appspecs->add( $name . ":", $option);
+			}
+		}
+		$parser = new ContinuousOptionParser( $appspecs );
+		array_unshift($options_array, "app");
+		$course_module_options = $parser->parse($options_array);
+		foreach ( $course_module_options as $name => $option ) {
+			echo "$name option = " . $option->value . "\n";
+			$moduledata->$name = $option->value;
+		} 
+	}
 
         if (!empty($options['name'])) {
             $moduledata->name = $options['name'];
