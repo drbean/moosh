@@ -26,11 +26,6 @@ class ActivityAdd extends MooshCommand
         $this->addOption('n|name:', 'activity instance name');
         $this->addOption('s|section:', 'section number', '1');
         $this->addOption('i|idnumber:', 'idnumber', null);
-        $this->addOption('g|grade:', 'grade', 9);
-        $this->addOption('G|gradecategory', 'grade category', null);
-        $this->addOption('v|overduehandling:', 'overduehandling', 'autosubmit');
-        $this->addOption('a|accessiblity:', 'accessiblity or availability?', null);
-	$this->addOption('c|content:', 'content: not available in all modules', null);
         $this->addOption('o|options:', 'any options that should be passed for activity creation', null);
 
         $this->addArgument('activitytype');
@@ -59,7 +54,7 @@ class ActivityAdd extends MooshCommand
 */
         $moduledata = new \stdClass();
         $moduledata->course = $this->arguments[1];
-        // $moduledata->requiresubmissionstatement = 1;
+        $moduledata->requiresubmissionstatement = 1;
 
         // $options are course module options.
         $options = $this->expandedOptions;
@@ -70,17 +65,6 @@ class ActivityAdd extends MooshCommand
         if (!empty($options['idnumber'])) {
             $moduledata->idnumber = $options['idnumber'];
         }
-        if (!empty($options['gradecategory'])) {
-            $moduledata->gradecategory = $options['gradecategory'];
-        }
-        if (!empty($options['accessiblity'])) {
-            $moduledata->availability = $options['accessiblity'];
-        }
-        if (!empty($options['content'])) {
-            $moduledata->content = $options['content'];
-        }
-	$moduledata->grade = $options['grade'];
-	$moduledata->overduehandling = $options['overduehandling'];
 
         $moduledata->section = $options['section'];
 
