@@ -29,6 +29,7 @@ class ActivityAdd extends MooshCommand
         $this->addOption('n|name:', 'activity instance name');
         $this->addOption('s|section:', 'section number', '1');
         $this->addOption('i|idnumber:', 'idnumber', null);
+        $this->addOption('d|description:', 'intro, description', null);
         $this->addOption('o|options:', 'any options that should be passed for activity creation', null);
 
         $this->addArgument('activitytype');
@@ -62,6 +63,7 @@ class ActivityAdd extends MooshCommand
         // $options are course module options.
         $options = $this->expandedOptions;
 
+	$optional_array = [];
         if (!empty($options['options'])) {
 		$appspecs = new OptionCollection;
 		$options_array = explode( ' ', $options['options']);
@@ -77,7 +79,7 @@ class ActivityAdd extends MooshCommand
 		$course_module_options = $parser->parse($options_array);
 		foreach ( $course_module_options as $name => $option ) {
 			echo "$name option = " . $option->value . "\n";
-			$moduledata->$name = $option->value;
+			$optional_array[$name] = $option->value;
 		} 
 	}
 
@@ -87,10 +89,13 @@ class ActivityAdd extends MooshCommand
         if (!empty($options['idnumber'])) {
             $moduledata->idnumber = $options['idnumber'];
         }
+        if (!empty($options['description'])) {
+            $moduledata->intro = $options['description'];
+        }
 
         $moduledata->section = $options['section'];
 
-        $record = $generator->create_module($this->arguments[0], $moduledata);
+        $record = $generator->create_module($this->arguments[0], $moduledata, $optional_array);
 
         if ($this->verbose) {
             echo "Activity {$this->arguments[0]} created successfully\n";
