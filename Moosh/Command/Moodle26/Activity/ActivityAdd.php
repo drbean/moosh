@@ -76,8 +76,10 @@ class ActivityAdd extends MooshCommand
 		array_unshift($options_array, "app");
 		$course_module_options = $parser->parse($options_array);
 		foreach ( $course_module_options as $name => $option ) {
-			echo "$name option = " . $option->value . "\n";
 			$moduledata->$name = $option->value;
+			if ($this->verbose) {
+				echo "$name option = " . $option->value . "\n";
+			}
 		} 
 	}
 
