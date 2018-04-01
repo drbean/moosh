@@ -15,9 +15,9 @@ class QuestionImport extends MooshCommand
     public function __construct()
     {
         parent::__construct('import', 'question');
-        $this->addOption('c|category:', 'question_category id', null);
         $this->addArgument('questions.xml');
         $this->addArgument('quiz_id');
+        $this->addArgument('question_category_id');
     }
 
     public function execute()
@@ -33,6 +33,7 @@ class QuestionImport extends MooshCommand
 
         $file = $arguments[0];
         $quiz = $arguments[1];
+	$category_id = $arguments[2];
         $quiz = $DB->get_record('quiz', array('id'=>$quiz),'*',MUST_EXIST);
         $course = $DB->get_record('course', array('id'=>$quiz->course),'*',MUST_EXIST);
         $coursecontext = \context_course::instance($course->id);
@@ -45,9 +46,6 @@ class QuestionImport extends MooshCommand
             $category = question_make_default_categories($contexts->all());
         }
 	$category->contextid = $coursecontext->id;
-        if (!empty($options['category'])) {
-            $category->id = $options['category'];
-        }
 
         $formatfile = $CFG->dirroot .  '/question/format/xml/format.php';
         if (!is_readable($formatfile)) {
