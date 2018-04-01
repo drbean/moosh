@@ -41,11 +41,10 @@ class QuestionImport extends MooshCommand
         $quizcontext = \context_module::instance($coursemodule->id,MUST_EXIST);
         $contexts = new \question_edit_contexts($quizcontext);
 
-        // Use existing questions category for quiz or create the defaults.
-        if (!$category = $DB->get_record('question_categories',array('contextid'=>$coursecontext->id))) {
-            $category = question_make_default_categories($contexts->all());
+        // Use existing questions category for quiz
+        if (!$category = $DB->get_record('question_categories',array('id'=>$category_id))) {
+            print_error("no question category with $category_id id", '');
         }
-	$category->contextid = $coursecontext->id;
 
         $formatfile = $CFG->dirroot .  '/question/format/xml/format.php';
         if (!is_readable($formatfile)) {
