@@ -64,7 +64,7 @@ class ActivityAdd extends MooshCommand
 
         if (!empty($options['options'])) {
 		$appspecs = new OptionCollection;
-		$options_array = explode( ' ', $options['options']);
+		$options_array = preg_split( '/\s+/', $options['options']);
 		foreach ( $options_array as $option ) {
 			if ( preg_match( '/^--/', $option ) ) {
 				$option = substr( $option, 2 );
