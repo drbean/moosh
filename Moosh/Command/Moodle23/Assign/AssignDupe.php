@@ -17,13 +17,15 @@ class AssignDupe extends MooshCommand
 
         //$this->addArgument('name');
 
-        //$this->addOption('t|test', 'option with no value');
-        //$this->addOption('o|option:', 'option with value and default', 'default');
+        $this->addOption('d|dupe:', 'option with no value', '');
+        $this->addOption('a|assign:', 'assignment id', '');
+        $this->addOption('f|format:', 'submission format', 'onlinetext');
 
     }
 
     public function execute()
     {
+	global $DB, $CFG;
         // Some variables you may want to use
         //  $this->cwd - the directory where moosh command was executed
         //  $this->mooshDir - moosh installation directory
@@ -34,6 +36,25 @@ class AssignDupe extends MooshCommand
         //  $this->verbose - if set to true, then "moosh -v" was run - add more verbose / debug information
 
         $options = $this->expandedOptions;
+	$assign = $options[ "assign" ];
+	$text = $options[ "dupe" ];
+	$format = $options[ "format" ];
+
+	$sql = "SELECT mdl_user.firstname, mdl_user.lastname, mdl_assignsubmission_" . $format . "." . $format . "
+			FROM mdl_assignsubmission_" . $format . "
+				LEFT JOIN mdl_assign_submission ON
+					mdl_assignsubmission_" . $format . ".submission = mdl_assign_submission.id
+				LEFT JOIN mdl_user ON
+					mdl_user.id = mdl_assign_submission.userid
+			WHERE mdl_assignsubmission_" . $format . ".assignment=? AND
+				mdl_assignsubmission_" . $format . "." . $format . " SIMILAR TO '%" . $text . "%'" ;
+
+	$submits = $DB->get_records_sql( $sql, array( $assign ) );
+	foreach ( $submits as $submit ) {
+		$cleaned = strip_tags( $submit->$format );
+		echo $submit->firstname . " " . $submit->lastname . "\t" . "$cleaned\n\n";
+	}
+
 
         /* if verbose mode was requested, show some more information/debug messages
         if($this->verbose) {
