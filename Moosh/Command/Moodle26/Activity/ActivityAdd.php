@@ -10,8 +10,7 @@
 namespace Moosh\Command\Moodle26\Activity;
 use Moosh\MooshCommand;
 
-use GetOptionKit\ContinuousOptionParser;
-use GetOptionKit\OptionCollection;
+use GetOptionKit\Argument;
 
 /**
  * Adds a new activity to the specified course
@@ -63,24 +62,16 @@ class ActivityAdd extends MooshCommand
         $options = $this->expandedOptions;
 
         if (!empty($options['options'])) {
-		$appspecs = new OptionCollection;
-		$options_array = preg_split( '/\s+(?=--)/', $options['options']);
-		foreach ( $options_array as $option ) {
-			if ( preg_match( '/^--/', $option ) ) {
-				$option = substr( $option, 2 );
-				list( $name, $value ) = explode( "=", $option );
-				$appspecs->add( $name . ":", $option);
+		$course_module_options = preg_split( '/\s+(?=--)/', $options['options']);
+		foreach ( $course_module_options as $option ) {
+			$arg = new Argument( $option );
+			$name = $arg->getOptionName();
+			$value = $arg->getOptionValue();
+			$moduledata->$name = $value;
+			if ($this->verbose) {
+				echo "\"$option\" -> $name=" . $value . "\n";
 			}
 		}
-		$parser = new ContinuousOptionParser( $appspecs );
-		array_unshift($options_array, "app");
-		$course_module_options = $parser->parse($options_array);
-		foreach ( $course_module_options as $name => $option ) {
-			$moduledata->$name = $option->value;
-			if ($this->verbose) {
-				echo "$name option = " . $option->value . "\n";
-			}
-		} 
 	}
 
         if (!empty($options['name'])) {
