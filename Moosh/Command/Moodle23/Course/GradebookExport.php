@@ -84,11 +84,9 @@ class GradebookExport extends MooshCommand
                 $decimalpoints, null, $separator);
 
         $export = new \grade_export_txt($course, $groupid, $formdata);
+        if ($this->verbose) { var_dump( $export ); }
         $export->print_grades();
 
         // if verbose mode was requested, show some more information/debug messages
-        if($this->verbose) {
-            var_dump( $formdata );
-        }
     }
 }
