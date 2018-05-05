@@ -20,7 +20,7 @@ class GradebookExport extends MooshCommand
         $this->addOption('i|id:', 'id', 26);
         $this->addOption('e|itemids:', 'exercise grade ids', null);
         $this->addOption('g|groupid:', 'group id', 0);
-        $this->addOption('f|exportfeedback:', 'exportfeedback', 0);
+        $this->addOption('p|exportfeedback:', 'exportfeedback', 0);
         $this->addOption('a|onlyactive:', 'onlyactive', 1);
         $this->addOption('d|displaytype:', 'displaytype. real=1, percentage=2, letter=3', '1');
         $this->addOption('p|decimalpoints:', 'decimalpoints', 2);
@@ -76,6 +76,9 @@ class GradebookExport extends MooshCommand
         if (!empty($options['separator'])) {
             $separator = $options['separator'];
         }
+        if (isset($options['format'])) {
+            $format = $options['format'];
+        }
 
         if (!$course = $DB->get_record('course', array('id'=>$id))) {
                     print_error('invalidcourseid');
@@ -84,9 +87,11 @@ class GradebookExport extends MooshCommand
         $formdata = \grade_export::export_bulk_export_data($id, $itemids, $exportfeedback, $onlyactive, $displaytype,
                 $decimalpoints, null, $separator);
 
-        $export = new \grade_export_txt($course, $groupid, $formdata);
-        if ($this->verbose) { var_dump( $export ); }
-        $export->print_grades();
+        if ( $format == 'txt' ) {
+                $export = new \grade_export_txt($course, $groupid, $formdata);
+                if ($this->verbose) { var_dump( $export ); }
+                $export->print_grades();
+        }
 
         // if verbose mode was requested, show some more information/debug messages
     }
