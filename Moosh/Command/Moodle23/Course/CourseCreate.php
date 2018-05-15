@@ -49,7 +49,7 @@ class CourseCreate extends MooshCommand
             $course->format = $format;
             $numsections = $options['numsections'];
             if(!$numsections){
-            	$numsections = get_config('moodlecourse', 'numsections');
+                $numsections = get_config('moodlecourse', 'numsections');
             }
             $course->numsections = $numsections;
             $course->idnumber = $options['idnumber'];
