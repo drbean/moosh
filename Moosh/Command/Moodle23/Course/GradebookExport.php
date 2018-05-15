@@ -17,10 +17,10 @@ class GradebookExport extends MooshCommand
 
         //$this->addArgument('name');
 
-        $this->addOption('i|id:', 'id', 26);
-        $this->addOption('e|itemids:', 'exercise grade ids', null);
+        $this->addOption('c|id:', 'course id', 26);
+        $this->addOption('i|itemids:', 'exercise grade ids', null);
         $this->addOption('g|groupid:', 'group id', 0);
-        $this->addOption('p|exportfeedback:', 'exportfeedback', 0);
+        $this->addOption('x|exportfeedback:', 'exportfeedback', 0);
         $this->addOption('a|onlyactive:', 'onlyactive', 1);
         $this->addOption('d|displaytype:', 'displaytype. real=1, percentage=2, letter=3', '1');
         $this->addOption('p|decimalpoints:', 'decimalpoints', 2);
@@ -38,6 +38,7 @@ class GradebookExport extends MooshCommand
 
         require_once($CFG->dirroot . '/grade/export/lib.php');
         require_once($CFG->dirroot . '/grade/export/txt/grade_export_txt.php');
+        require_once($CFG->dirroot . '/grade/export/ods/grade_export_ods.php');
         require_once($CFG->libdir . '/grade/grade_item.php');
         require_once($CFG->libdir . '/csvlib.class.php');
 
@@ -61,16 +62,16 @@ class GradebookExport extends MooshCommand
         if (isset($options['groupid'])) {
             $groupid = $options['groupid'];
         }
-        if (!empty($options['exportfeedback'])) {
+        if (isset($options['exportfeedback'])) {
             $exportfeedback = $options['exportfeedback'];
         }
         if (!empty($options['onlyactive'])) {
             $onlyactive = $options['onlyactive'];
         }
-        if (!empty($options['displaytype'])) {
+        if (isset($options['displaytype'])) {
             $displaytype = $options['displaytype'];
         }
-        if (!empty($options['decimalpoints'])) {
+        if (isset($options['decimalpoints'])) {
             $decimalpoints = $options['decimalpoints'];
         }
         if (!empty($options['separator'])) {
@@ -87,11 +88,14 @@ class GradebookExport extends MooshCommand
         $formdata = \grade_export::export_bulk_export_data($id, $itemids, $exportfeedback, $onlyactive, $displaytype,
                 $decimalpoints, null, $separator);
 
+        if ( $format == 'odt' ) {
+                $export = new \grade_export_xml($course, $groupid, $formdata);
+        }
         if ( $format == 'txt' ) {
                 $export = new \grade_export_txt($course, $groupid, $formdata);
-                if ($this->verbose) { var_dump( $export ); }
-                $export->print_grades();
         }
+        if ($this->verbose) { var_dump( $export ); }
+        $export->print_grades();
 
         // if verbose mode was requested, show some more information/debug messages
     }
