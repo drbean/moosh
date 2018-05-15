@@ -37,7 +37,7 @@ use GetOptionKit\OptionCollection;
 @error_reporting(E_ALL | E_STRICT);
 @ini_set('display_errors', '1');
 
-define('MOOSH_VERSION', '0.25');
+define('MOOSH_VERSION', '0.26');
 define('MOODLE_INTERNAL', true);
 
 $appspecs = new OptionCollection;
@@ -182,7 +182,7 @@ if ($bootstrap_level = $subcommand->bootstrapLevel()) {
         $_SERVER['REMOTE_ADDR'] = 'localhost';
         $_SERVER['SERVER_PORT'] = 80;
         $_SERVER['SERVER_PROTOCOL'] = 'HTTP 1.1';
-        $_SERVER['SERVER_SOFTWARE'] = 'PHP/'.phpversion() ;
+        $_SERVER['SERVER_SOFTWARE'] = 'PHP /'.phpversion().' Development Server';
         $_SERVER['REQUEST_URI'] = '/';
     } else {
         define('CLI_SCRIPT', true);
