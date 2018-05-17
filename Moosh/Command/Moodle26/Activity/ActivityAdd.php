@@ -67,6 +67,9 @@ class ActivityAdd extends MooshCommand
 			$arg = new Argument( $option );
 			$name = $arg->getOptionName();
 			$value = $arg->getOptionValue();
+                        if(!isset($value)) {
+                            $value = get_config($this->arguments[0], $name);
+                        }
 			$moduledata->$name = $value;
 			if ($this->verbose) {
 				echo "\"$option\" -> $name=" . $value . "\n";
