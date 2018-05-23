@@ -40,7 +40,7 @@ class AssignDupe extends MooshCommand
 	$text = $options[ "dupe" ];
 	$format = $options[ "format" ];
 
-	$sql = "SELECT mdl_user.firstname, mdl_user.lastname, mdl_assignsubmission_" . $format . "." . $format . "
+	$sql = "SELECT mdl_user.firstname, mdl_user.lastname, mdl_assign_submission.timecreated, mdl_assign_submission.timemodified, mdl_assignsubmission_" . $format . "." . $format . "
 			FROM mdl_assignsubmission_" . $format . "
 				LEFT JOIN mdl_assign_submission ON
 					mdl_assignsubmission_" . $format . ".submission = mdl_assign_submission.id
@@ -52,7 +52,7 @@ class AssignDupe extends MooshCommand
 	$submits = $DB->get_records_sql( $sql, array( $assign ) );
 	foreach ( $submits as $submit ) {
 		$cleaned = strip_tags( $submit->$format );
-		echo $submit->firstname . " " . $submit->lastname . "\t" . "$cleaned\n\n";
+		echo $submit->firstname . "\t" . $submit->lastname . " " . $submit->timecreated . " " . $submit->timemodified . " " . "$cleaned\n\n";
 	}
 
 
