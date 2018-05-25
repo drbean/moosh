@@ -58,6 +58,10 @@ class GroupCreate extends MooshCommand
 
 	}
         $group->descriptionformat = $options['format'];
+        if (!empty($options['key'])) {
+            $group->key = $options['key'];
+
+	}
 
 	$newgroupid = groups_create_group($group, false, false);
 	echo "$group->name ($newgroupid)\n";
