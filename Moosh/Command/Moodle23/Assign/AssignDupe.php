@@ -52,7 +52,7 @@ class AssignDupe extends MooshCommand
 	$submits = $DB->get_records_sql( $sql, array( $assign ) );
 	foreach ( $submits as $submit ) {
 		$cleaned = strip_tags( $submit->$format );
-		echo $submit->firstname . "\t" . $submit->lastname . " " . $submit->timecreated . " " . $submit->timemodified . " " . "$cleaned\n\n";
+		echo $submit->timecreated . " " . $submit->timemodified . " " . $submit->firstname . "\t" . $submit->lastname . " " . "$cleaned\n\n";
 	}
 
 
