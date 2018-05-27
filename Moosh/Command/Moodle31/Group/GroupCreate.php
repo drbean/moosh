@@ -65,11 +65,5 @@ class GroupCreate extends MooshCommand
 
 	$newgroupid = groups_create_group($group, false, false);
 	echo "$group->name ($newgroupid)\n";
-
-
-        // if verbose mode was requested, show some more information/debug messages
-        if($this->verbose) {
-            echo "In course $id, with description $group->description, key $group->key\n";
-        }
     }
 }
