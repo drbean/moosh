@@ -69,7 +69,7 @@ class GroupCreate extends MooshCommand
 
         // if verbose mode was requested, show some more information/debug messages
         if($this->verbose) {
-            echo "In course $group->courseid, with description \"$group->description\", key \"$group->key\"\n";
+            echo "In course $id, with description $group->description, key $group->key\n";
         }
     }
 }
