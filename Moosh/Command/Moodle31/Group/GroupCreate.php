@@ -15,12 +15,10 @@ class GroupCreate extends MooshCommand
     {
         parent::__construct('create', 'group');
 
-        //$this->addArgument('name');
-
         $this->addOption('i|id:', 'group idnumber', NULL);
         $this->addOption('d|description:', 'meaningful explanation of group role', NULL);
         $this->addOption('f|format:', 'description format', 4);
-	// lib/weblib.php defines FORMAT_MARKDOWN
+        // lib/weblib.php defines FORMAT_MARKDOWN
         $this->addOption('k|key:', 'enrolment key', NULL);
         $this->addArgument('groupname');
         $this->addArgument('course');
@@ -35,7 +33,7 @@ class GroupCreate extends MooshCommand
 
         require_once $CFG->dirroot . '/group/lib.php';
 
-	$group = new \stdClass();
+        $group = new \stdClass();
         $group->courseid = $this->arguments[1];
         $group->name = $this->arguments[0];
 
@@ -56,14 +54,14 @@ class GroupCreate extends MooshCommand
         if (!empty($options['description'])) {
             $group->description = $options['description'];
 
-	}
+        }
         $group->descriptionformat = $options['format'];
         if (!empty($options['key'])) {
             $group->key = $options['key'];
 
-	}
+        }
 
-	$newgroupid = groups_create_group($group, false, false);
-	echo "$group->name ($newgroupid)\n";
+        $newgroupid = groups_create_group($group, false, false);
+        echo "$group->name ($newgroupid)\n";
     }
 }
