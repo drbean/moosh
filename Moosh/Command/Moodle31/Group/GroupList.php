@@ -44,6 +44,7 @@ class GroupList extends MooshCommand {
             else {
                 $groupings = $DB->get_records('groupings', array('courseid'=>$courseid) );
             }
+            $dupe = array();
             foreach ($groupings as $grouping) {
                 if (empty($options["id"])) {
                     echo "grouping " . $grouping->id . " \"" . $grouping->name . "\" " . $grouping->description . "\n";
@@ -52,16 +53,36 @@ class GroupList extends MooshCommand {
                 foreach ($grouping_groups as $grouping_group) {
                     $groups = $DB->get_records('groups', array('id'=>$grouping_group->groupid) );
                     foreach ($groups as $group) {
-                        if (!empty($options["id"])) {
-                            echo $group->id . "\n";
-                            }
+                        $id = $group->id;
+                        if (!empty($options["id"])) { echo $id . "\n"; }
                         else {
-                            echo "\tgroup " . $group->id . " \"" . $group->name . "\" " . $group->description . "\n";
+                            echo "\tgroup " . $id . " \"" . $group->name . "\" " . $group->description . "\n";
+                        }
+                        $dupe[$id] = $group;
+                    }
+                }
+            }
+            if (empty($options["groupingid"])) {
+                $free_groups = $DB->get_records('groups', array('courseid'=>$courseid) );
+                foreach ($free_groups as $i => $group) {
+                    $id = $group->id;
+                    if (isset($dupe[$id])) {
+                            unset($free_groups[$i]);
+                    }
+                }
+                if (!empty($free_groups)) {
+                    if (empty($options["id"])) {
+                            echo "No grouping\n";
+                    }
+                    foreach ($free_groups as $group) {
+                        $id = $group->id;
+                        if (!empty($options["id"])) { echo $id . "\n"; }
+                        else {
+                            echo "\tgroup " . $id . " \"" . $group->name . "\" " . $group->description . "\n";
                         }
                     }
                 }
             }
         }
     }
-
 }
