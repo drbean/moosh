@@ -53,10 +53,11 @@ class GroupList extends MooshCommand {
                 foreach ($grouping_groups as $grouping_group) {
                     $groups = $DB->get_records('groups', array('id'=>$grouping_group->groupid) );
                     foreach ($groups as $group) {
-                        $id = $group->id;
-                        if (!empty($options["id"])) { echo $id . "\n"; }
+                        if (!empty($options["id"])) {
+                            echo $group->id . "\n";
+                            }
                         else {
-                            echo "\tgroup " . $id . " \"" . $group->name . "\" " . $group->description . "\n";
+                            echo "\tgroup " . $group->id . " \"" . $group->name . "\" " . $group->description . "\n";
                         }
                         $dupe[$id] = $group;
                     }
@@ -75,10 +76,9 @@ class GroupList extends MooshCommand {
                             echo "No grouping\n";
                     }
                     foreach ($free_groups as $group) {
-                        $id = $group->id;
                         if (!empty($options["id"])) { echo $id . "\n"; }
                         else {
-                            echo "\tgroup " . $id . " \"" . $group->name . "\" " . $group->description . "\n";
+                            echo "\tgroup " . $group->id . " \"" . $group->name . "\" " . $group->description . "\n";
                         }
                     }
                 }
