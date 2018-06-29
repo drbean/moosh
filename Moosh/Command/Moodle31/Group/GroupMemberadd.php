@@ -30,15 +30,6 @@ class GroupMemberadd extends MooshCommand
         require_once $CFG->dirroot . '/group/lib.php';
         require_once $CFG->dirroot . '/user/lib.php';
 
-        // Some variables you may want to use
-        //  $this->cwd - the directory where moosh command was executed
-        //  $this->mooshDir - moosh installation directory
-        //  $this->expandedOptions - commandline provided options, merged with defaults
-        //  $this->topDir - top Moodle directory
-        //  $this->arguments[0] - first argument passed
-        //  $this->pluginInfo - array with information about the current plugin (based on cwd), keys:'type','name','dir'
-        //  $this->verbose - if set to true, then "moosh -v" was run - add more verbose / debug information
-
         $options = $this->expandedOptions;
 
         $membership = new \stdClass();
@@ -86,10 +77,5 @@ class GroupMemberadd extends MooshCommand
             }
         }
         echo "$names\n";
-
-        // if verbose mode was requested, show some more information/debug messages
-        if($this->verbose) {
-            echo "Say what you're doing now\n";
-        }
     }
 }
