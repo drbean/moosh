@@ -15,8 +15,6 @@ class GroupingCreate extends MooshCommand
     {
         parent::__construct('create', 'grouping');
 
-        //$this->addArgument('name');
-
         $this->addOption('i|id:', 'grouping idnumber', NULL);
         $this->addOption('d|description:', 'meaningful explanation of grouping role', NULL);
         $this->addOption('f|format:', 'description format', 4);
@@ -38,15 +36,6 @@ class GroupingCreate extends MooshCommand
         $grouping->courseid = $this->arguments[1];
         $grouping->name = $this->arguments[0];
 
-        // Some variables you may want to use
-        //  $this->cwd - the directory where moosh command was executed
-        //  $this->mooshDir - moosh installation directory
-        //  $this->expandedOptions - commandline provided options, merged with defaults
-        //  $this->topDir - top Moodle directory
-        //  $this->arguments[0] - first argument passed
-        //  $this->pluginInfo - array with information about the current plugin (based on cwd), keys:'type','name','dir'
-        //  $this->verbose - if set to true, then "moosh -v" was run - add more verbose / debug information
-
         $options = $this->expandedOptions;
 
         if (!empty($options['id'])) {
@@ -60,11 +49,5 @@ class GroupingCreate extends MooshCommand
 
 	$newgroupingid = groups_create_grouping($grouping, NULL);
 	echo "$grouping->name ($newgroupingid)\n";
-
-
-        // if verbose mode was requested, show some more information/debug messages
-        if($this->verbose) {
-            echo "Say what you're doing now";
-        }
     }
 }
