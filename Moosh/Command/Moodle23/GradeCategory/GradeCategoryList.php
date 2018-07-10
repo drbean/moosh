@@ -47,7 +47,7 @@ class GradeCategoryList extends MooshCommand {
         if ($options['empty'] == 'only' || $options['empty'] == 'not') {
             $sql .= "COUNT(c.id) AS modules,";
         }
-        $sql .= "c.fullname,c.hidden FROM {grade_categories} c ";
+        $sql .= "c.parent,c.depth,c.path,c.fullname,c.hidden FROM {grade_categories} c ";
 
         if ($options['empty'] == 'only' || $options['empty'] == 'not') {
             $sql .= " LEFT JOIN {course_modules} m ON c.id=m.course ";
@@ -131,6 +131,7 @@ class GradeCategoryList extends MooshCommand {
     }
 
     protected function display($gradecats) {
+
         $options = $this->expandedOptions;
         $fields = NULL;
         if ($options['fields']) {
@@ -162,8 +163,8 @@ class GradeCategoryList extends MooshCommand {
                     $header[] = $field;
                     //$outputheader .= str_pad($field, 20);
                 }
-                if ($field == "path") {
-                    $value = build_path($value);
+                if ($field == "parent" && $value > 0) {
+                    $value = $this->get_parent($value);
                 } elseif ($field == "parent") {
                     $value = "Top";
                 }
