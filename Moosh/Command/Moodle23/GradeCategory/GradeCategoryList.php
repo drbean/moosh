@@ -64,15 +64,15 @@ class GradeCategoryList extends MooshCommand {
 
     }
 
-    private function find_item($category_id) {
+    private function has_item($category_id) {
         global $DB;
 
-        if ($item = $DB->get_record('grade_items', array("categoryid" => $category_id))) {
+        if ($item = $DB->get_records('grade_items', array("categoryid" => $category_id))) {
             return true;
         }
-        elseif ($children = $DB->get_record('grade_categories', array("parent" => $category_id))) {
+        elseif ($children = $DB->get_records('grade_categories', array("parent" => $category_id))) {
             foreach ($children as $child) {
-                return $this->find_item($child->id);
+                return $this->has_item($child->id);
             }
         }
         else { return false; }
@@ -112,6 +112,13 @@ class GradeCategoryList extends MooshCommand {
                 continue;
             }
             if ($options['hidden'] == 'not' && $category->hidden != 0) {
+                continue;
+            }
+            $id = $category->id;
+            if ($options['empty'] == 'only' && $this->has_item($id) == true) {
+                continue;
+            }
+            if ($options['empty'] == 'not' && $this->has_item($id) == false) {
                 continue;
             }
             if ($options['id']) {
