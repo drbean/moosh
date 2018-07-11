@@ -70,21 +70,7 @@ class GradeCategoryList extends MooshCommand {
 
         $gradecats = $DB->get_records_sql($sql, $params);
 
-        // Filter out any that have any section information (summary)
-        if ($options['empty'] == 'only') {
-            $sql = "SELECT COUNT(*) AS C FROM {course_sections} WHERE course = ? AND summary <> ''";
-            foreach ($gradecats as $k => $gradecat) {
-                $sections = $DB->get_record_sql($sql, array($gradecat->id));
-                if ($sections->c > 0) {
-                    unset($gradecats[$k]);
-                }
-            }
-        }
-
-        // @TODO: If empty == no, then add those that have no modules but some modification to sections
-
         $this->display($gradecats);
-
 
     }
 
