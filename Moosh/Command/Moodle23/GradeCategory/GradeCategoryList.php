@@ -15,8 +15,8 @@ class GradeCategoryList extends MooshCommand {
         parent::__construct('list', 'gradecategory');
 
         $this->addOption('i|id', 'display id column only');
-        $this->addOption('h|hidden:', 'show all/only/not hidden', 'all');
-        $this->addOption('e|empty:', 'show only empty grade categories: all/only/not empty', 'all');
+        $this->addOption('h|hidden:', 'show all/yes/no if hidden', 'all');
+        $this->addOption('e|empty:', 'show only empty grade categories: all/yes/no if empty', 'all');
         $this->addOption('f|fields:', 'show only those fields in the output (comma separated)');
         $this->addOption('o|output:', 'output format: tab, csv', 'csv');
 
@@ -108,17 +108,17 @@ class GradeCategoryList extends MooshCommand {
         $output = array();
         foreach ($gradecats as $category) {
             $line = array();
-            if ($options['hidden'] == 'only' && $category->hidden == 0) {
+            if ($options['hidden'] == 'yes' && $category->hidden == 0) {
                 continue;
             }
-            if ($options['hidden'] == 'not' && $category->hidden != 0) {
+            if ($options['hidden'] == 'no' && $category->hidden != 0) {
                 continue;
             }
             $id = $category->id;
-            if ($options['empty'] == 'only' && $this->has_item($id) == true) {
+            if ($options['empty'] == 'yes' && $this->has_item($id) == true) {
                 continue;
             }
-            if ($options['empty'] == 'not' && $this->has_item($id) == false) {
+            if ($options['empty'] == 'no' && $this->has_item($id) == false) {
                 continue;
             }
             if ($options['id']) {
