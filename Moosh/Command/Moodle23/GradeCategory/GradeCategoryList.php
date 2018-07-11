@@ -43,7 +43,9 @@ class GradeCategoryList extends MooshCommand {
 
         $params = NULL;
         $sql = "SELECT c.id,c.courseid,";
-        $sql .= "c.parent,c.fullname,c.hidden FROM {grade_categories} c ";
+        $sql .= "c.parent,c.fullname, c.aggregation, c.keephigh, c.droplow,";
+        $sql .= "c.aggregateonlygraded, c.aggregateoutcomes, c.timecreated,";
+        $sql .= "c.timemodified,c.hidden FROM {grade_categories} c ";
         $sql .= "WHERE '1'='1' ";
 
         // Glue arguments together, so end user does not need to provide single argument.
