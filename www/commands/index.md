@@ -1140,6 +1140,16 @@ Example:
 
     moosh gradecategory-list --hidden=yes --empty=yes --fields=id,parent,fullname courseid=26
 
+<span class="anchor" id="gradeitem-list"></span>
+<a class="command-name">gradeitem-list</a>
+---------------
+
+Lists grade items, with command-line options, arguments modeled on course-list's.
+
+Example:
+
+    moosh gradeitem-list --hidden=yes --locked=no --empty=yes --fields=id,categoryid,itemname courseid=26
+
 <span class="anchor" id="gradebook-import"></span>
 <a class="command-name">gradebook-import</a>
 ---------------
