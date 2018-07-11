@@ -45,12 +45,12 @@ class GradeCategoryList extends MooshCommand {
         $params = NULL;
         $sql = "SELECT c.id,c.courseid,";
         if ($options['empty'] == 'only' || $options['empty'] == 'not') {
-            $sql .= "COUNT(c.id) AS modules,";
+            $sql .= "COUNT(c.id) AS items,";
         }
-        $sql .= "c.parent,c.depth,c.path,c.fullname,c.hidden FROM {grade_categories} c ";
+        $sql .= "c.parent,c.fullname,c.hidden,i.id AS itemid FROM {grade_categories} c ";
 
         if ($options['empty'] == 'only' || $options['empty'] == 'not') {
-            $sql .= " LEFT JOIN {course_modules} m ON c.id=m.course ";
+            $sql .= " LEFT OUTER JOIN {grade_items} i ON c.id=i.categoryid ";
         }
 
         $sql .= "WHERE '1'='1' ";
@@ -70,10 +70,10 @@ class GradeCategoryList extends MooshCommand {
             $sql .= " AND ($customwhere)";
         }
         if ($options['empty'] == 'only') {
-            $sql .= " GROUP BY c.id HAVING modules < 2";
+            $sql .= " GROUP BY c.id HAVING items < 2";
         }
         if ($options['empty'] == 'not') {
-            $sql .= " GROUP BY c.id HAVING modules > 1";
+            $sql .= " GROUP BY c.id HAVING items > 1";
         }
 
         if($this->verbose) {
