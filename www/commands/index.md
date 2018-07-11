@@ -1130,6 +1130,16 @@ Example:
 
     moosh gradecategory-create -n category-name -a aggregation parent_id course_id
 
+<span class="anchor" id="gradecategory-list"></span>
+<a class="command-name">gradecategory-list</a>
+---------------
+
+Lists grade categories, with command-line options, arguments modeled on course-list's.
+
+Example:
+
+    moosh gradecategory-list --hidden=yes --empty=yes --fields=id,parent,fullname courseid=26
+
 <span class="anchor" id="gradebook-import"></span>
 <a class="command-name">gradebook-import</a>
 ---------------
