@@ -29,10 +29,6 @@ class GradeCategoryList extends MooshCommand {
     public function execute() {
         global $CFG, $DB;
 
-
-        require_once $CFG->libdir . '/grade/grade_category.php';
-        require_once $CFG->libdir . '/coursecatlib.php';
-
         foreach ($this->arguments as $argument) {
             $this->expandOptionsManually(array($argument));
         }
