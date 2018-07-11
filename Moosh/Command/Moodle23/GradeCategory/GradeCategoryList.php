@@ -102,6 +102,20 @@ class GradeCategoryList extends MooshCommand {
 
     }
 
+    private function find_item($category_id) {
+        global $DB;
+
+        if ($item = $DB->get_record('grade_items', array("categoryid" => $category_id))) {
+            return true;
+        }
+        elseif ($children = $DB->get_record('grade_categories', array("parent" => $category_id))) {
+            foreach ($children as $child) {
+                return $this->find_item($child->id);
+            }
+        }
+        else { return false; }
+    }
+
     private function get_parent($id, $parentname = NULL) {
         global $DB;
 
