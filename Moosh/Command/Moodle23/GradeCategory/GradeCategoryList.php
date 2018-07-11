@@ -15,7 +15,6 @@ class GradeCategoryList extends MooshCommand {
         parent::__construct('list', 'gradecategory');
 
         $this->addOption('i|id', 'display id column only');
-        $this->addOption('c|coursesearch:', 'grade categories in given course id only');
         $this->addOption('h|hidden:', 'show all/only/not hidden', 'all');
         $this->addOption('e|empty:', 'show only empty grade categories: all/only/not empty', 'all');
         $this->addOption('f|fields:', 'show only those fields in the output (comma separated)');
@@ -46,15 +45,6 @@ class GradeCategoryList extends MooshCommand {
         $sql = "SELECT c.id,c.courseid,";
         $sql .= "c.parent,c.fullname,c.hidden FROM {grade_categories} c ";
         $sql .= "WHERE '1'='1' ";
-        if ($options['coursesearch'] ) {
-            $category = \coursecat::get($options['coursesearch']);
-
-            $categories = $this->get_categories($category);
-
-            list($where, $params) = $DB->get_in_or_equal(array_keys($categories));
-
-            $sql .= "AND c.category $where";
-        }
 
         // Glue arguments together, so end user does not need to provide single argument.
         if (isset($this->arguments[0]) && $this->arguments[0]) {
@@ -101,19 +91,6 @@ class GradeCategoryList extends MooshCommand {
         }
         return $parentname;
 
-    }
-
-
-    protected function get_categories(\coursecat $category) {
-        static $categories = array();
-
-        $categories[$category->id] = $category->name;
-
-        foreach ($category->get_children() as $child) {
-            $this->get_categories($child);
-        }
-
-        return $categories;
     }
 
     protected function display($gradecats) {
