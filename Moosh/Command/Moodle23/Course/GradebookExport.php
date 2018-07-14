@@ -39,6 +39,8 @@ class GradebookExport extends MooshCommand
         require_once($CFG->dirroot . '/grade/export/lib.php');
         require_once($CFG->dirroot . '/grade/export/txt/grade_export_txt.php');
         require_once($CFG->dirroot . '/grade/export/ods/grade_export_ods.php');
+        require_once($CFG->dirroot . '/grade/export/xls/grade_export_xls.php');
+        require_once($CFG->dirroot . '/grade/export/xml/grade_export_xml.php');
         require_once($CFG->libdir . '/grade/grade_item.php');
         require_once($CFG->libdir . '/csvlib.class.php');
 
@@ -89,10 +91,16 @@ class GradebookExport extends MooshCommand
                 $decimalpoints, null, $separator);
 
         if ( $format == 'odt' ) {
-                $export = new \grade_export_xml($course, $groupid, $formdata);
+                $export = new \grade_export_ods($course, $groupid, $formdata);
         }
         if ( $format == 'txt' ) {
                 $export = new \grade_export_txt($course, $groupid, $formdata);
+        }
+        if ( $format == 'xls' ) {
+                $export = new \grade_export_xls($course, $groupid, $formdata);
+        }
+        if ( $format == 'xml' ) {
+                $export = new \grade_export_xml($course, $groupid, $formdata);
         }
         if ($this->verbose) { var_dump( $export ); }
         $export->print_grades();
