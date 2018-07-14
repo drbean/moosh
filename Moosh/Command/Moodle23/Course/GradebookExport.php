@@ -24,7 +24,7 @@ class GradebookExport extends MooshCommand
         $this->addOption('a|onlyactive:', 'onlyactive', 1);
         $this->addOption('d|displaytype:', 'displaytype. real=1, percentage=2, letter=3', '1');
         $this->addOption('p|decimalpoints:', 'decimalpoints', 2);
-        $this->addOption('s|separator:', 'separator', 'comma');
+        $this->addOption('s|separator:', 'separator, eg, tab, comma', 'comma');
         $this->addOption('f|format:', 'export format, ie, ods, txt, xls, xml', 'txt');
 
 
