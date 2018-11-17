@@ -22,6 +22,7 @@ class UserMod extends MooshCommand
         $this->addOption('p|password:', 'password');
         $this->addOption('e|email:','email address');
         $this->addOption('f|firstname:','user firstname');
+        $this->addOption('I|idnumber:','user idnumber');
 
         $this->addOption('g|global', 'user(s) to be set as global admin.', false);
         $this->addOption('n|ignorepolicy', 'ignore password policy.', false);
@@ -71,6 +72,10 @@ class UserMod extends MooshCommand
                 $sqlFragment[] = 'auth = ?';
                 $parameters['auth'] = $this->parsedOptions['auth']->value;
             }
+            if($this->parsedOptions->has('idnumber')) {
+                $sqlFragment[] = 'idnumber = ?';
+                $parameters['idnumber'] = $this->parsedOptions['idnumber']->value;
+            }
 
             if(count($sqlFragment) == 0) {
                 cli_error('You need to provide at least one option for updating a profile field (password or email)');
@@ -105,6 +110,9 @@ class UserMod extends MooshCommand
             }
             if($this->parsedOptions->has('auth')) {
                 $user->auth = $this->parsedOptions['auth']->value;
+            }
+            if($this->parsedOptions->has('idnumber')) {
+                $user->idnumber = $this->parsedOptions['idnumber']->value;
             }
 
             if ($this->parsedOptions->has('global')) {
