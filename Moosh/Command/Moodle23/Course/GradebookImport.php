@@ -36,7 +36,7 @@ class GradebookImport extends MooshCommand
 
         $options = $this->expandedOptions;
         
-        $USER = $this->user;
+        # $USER = $this->user;
 
         $text = file_get_contents($this->arguments[0]);
         if (!$text) {
