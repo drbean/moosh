@@ -15,6 +15,8 @@ class QuestionImport extends MooshCommand
     public function __construct()
     {
         parent::__construct('import', 'question');
+        $this->addOption('r|random:', 'random number of (tagged) questions from the category', NULL);
+        $this->addOption('t|tag:', 'tag on questions from the category', NULL);
         $this->addArgument('questions.xml');
         $this->addArgument('quiz_id');
         $this->addArgument('question_category_id');
@@ -28,6 +30,8 @@ class QuestionImport extends MooshCommand
         require_once($CFG->dirroot . '/question/import_form.php');
         require_once($CFG->dirroot . '/question/format.php');
         require_once($CFG->dirroot . '/lib/questionlib.php');
+
+        $options = $this->expandedOptions;
         $arguments = $this->arguments;
         $this->checkFileArg($arguments[0]);
 
@@ -81,7 +85,23 @@ class QuestionImport extends MooshCommand
         require_once($CFG->dirroot . '/mod/quiz/locallib.php');
         foreach ($qformat->questionids as $addquestion) {
             quiz_require_question_use($addquestion);
-            quiz_add_quiz_question($addquestion, $quiz, $addonpage);
+            if (!empty($options['random'])) {
+                if (empty($options['tag'])) {
+                    print_error("No tag for choosing {$options['random']} random questions", '');
+                }
+
+                echo "tags = {$options['tag']}\n";
+                $tag = \core_tag_tag::get_by_name(0, $options['tag'], "id", MUST_EXIST);
+                if (empty($tag)){
+                    print_error("No '$tag' tagid for '{$options['tag']}' tag\n", '');
+                }
+                quiz_add_random_questions($quiz, $addonpage, $category_id, $options['random'], true, [$tagid]);
+                echo "tagid = $tagid\n";
+        }
+            else {
+                quiz_add_quiz_question($addquestion, $quiz, $addonpage);
+                echo "no tagid = {$options['random']}\n";
+            }
             quiz_delete_previews($quiz);
             quiz_update_sumgrades($quiz);
         }
