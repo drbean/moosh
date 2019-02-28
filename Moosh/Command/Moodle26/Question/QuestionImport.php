@@ -91,7 +91,7 @@ class QuestionImport extends MooshCommand
                 }
 
                 echo "tags = {$options['tag']}\n";
-                $tag = \core_tag_tag::get_by_name(0, $options['tag'], "id", MUST_EXIST);
+                $tag = \core_tag_tag::set_item_tag('question', $options['tag'], "id", MUST_EXIST);
                 if (empty($tag)){
                     print_error("No '$tag' tagid for '{$options['tag']}' tag\n", '');
                 }
