@@ -37,7 +37,7 @@ class QuestionImport extends MooshCommand
 
         $file = $arguments[0];
         $quiz = $arguments[1];
-	$category_id = $arguments[2];
+        $category_id = $arguments[2];
         $quiz = $DB->get_record('quiz', array('id'=>$quiz),'*',MUST_EXIST);
         $course = $DB->get_record('course', array('id'=>$quiz->course),'*',MUST_EXIST);
         $coursecontext = \context_course::instance($course->id);
@@ -83,28 +83,28 @@ class QuestionImport extends MooshCommand
         }
         $addonpage = 1;
         require_once($CFG->dirroot . '/mod/quiz/locallib.php');
-        foreach ($qformat->questionids as $addquestion) {
-            quiz_require_question_use($addquestion);
-            if (!empty($options['random'])) {
-                if (empty($options['tag'])) {
-                    print_error("No tag for choosing {$options['random']} random questions", '');
-                }
-
-                echo "tags = {$options['tag']}\n";
-                $tag = \core_tag_tag::set_item_tag('question', $options['tag'], "id", MUST_EXIST);
-                if (empty($tag)){
-                    print_error("No '$tag' tagid for '{$options['tag']}' tag\n", '');
-                }
-                quiz_add_random_questions($quiz, $addonpage, $category_id, $options['random'], true, [$tagid]);
-                echo "tagid = $tagid\n";
+        if (!empty($options['random'])) {
+            if (empty($options['tag'])) {
+                print_error("No tag for choosing {$options['random']} random questions", '');
             }
-            else {
+
+            echo "tags = {$options['tag']}\n";
+            $tag = \core_tag_tag::get_by_name(1, $options['tag'], "id", MUST_EXIST);
+            if (empty($tag)){
+                print_error("No '$tag' tagid for '{$options['tag']}' tag\n", '');
+            }
+            quiz_add_random_questions($quiz, $addonpage, $category_id, $options['random'], true, $tag->id);
+            echo "tagid = " . $tag->id . "\n";
+        }
+        else {
+            foreach ($qformat->questionids as $addquestion) {
+                quiz_require_question_use($addquestion);
                 quiz_add_quiz_question($addquestion, $quiz, $addonpage);
                 echo "no tagid = {$options['random']}\n";
             }
-            quiz_delete_previews($quiz);
-            quiz_update_sumgrades($quiz);
         }
+        quiz_delete_previews($quiz);
+        quiz_update_sumgrades($quiz);
     }
 
     public function importQuiz($courseid, $quizid)
