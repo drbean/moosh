@@ -97,7 +97,7 @@ class QuestionImport extends MooshCommand
                 }
                 quiz_add_random_questions($quiz, $addonpage, $category_id, $options['random'], true, [$tagid]);
                 echo "tagid = $tagid\n";
-        }
+            }
             else {
                 quiz_add_quiz_question($addquestion, $quiz, $addonpage);
                 echo "no tagid = {$options['random']}\n";
