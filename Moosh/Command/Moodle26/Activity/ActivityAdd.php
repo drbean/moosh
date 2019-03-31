@@ -86,13 +86,8 @@ class ActivityAdd extends MooshCommand
         }
 
         $moduledata->section = $options['section'];
-	$moduledata->reviewrightanswer = '0x10010';
 
         $record = $generator->create_module($this->arguments[0], $moduledata);
-	$moduledata->coursemodule = $record->cmid;
-	global $CFG, $DB;
-	require_once($CFG->dirroot . '/mod/quiz/lib.php');
-	quiz_add_instance($moduledata);
 
         if ($this->verbose) {
             echo "Activity {$this->arguments[0]} created successfully\n";
