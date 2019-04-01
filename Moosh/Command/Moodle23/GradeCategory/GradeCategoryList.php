@@ -91,7 +91,7 @@ class GradeCategoryList extends MooshCommand {
 
     }
 
-    protected function display($gradecats) {
+    protected function display($gradecats, $json = false, $humanreadable = true) {
 
         $options = $this->expandedOptions;
         $fields = NULL;
