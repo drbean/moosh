@@ -21,7 +21,6 @@ class ActivityDelete extends MooshCommand
     {
         global $CFG, $DB;
         require_once $CFG->dirroot . '/course/lib.php';
-        require_once $CFG->dirroot . '/mod/quiz/lib.php';
 
         $moduleid = intval($this->arguments[0]);
 
@@ -33,8 +32,7 @@ class ActivityDelete extends MooshCommand
             cli_error("There is no such activity to delete.");
         }
 
-        // course_delete_module($moduleid);
-	quiz_delete_instance($moduleid);
+        course_delete_module($moduleid);
         echo "Deleted activity $moduleid\n";
     }
 }
