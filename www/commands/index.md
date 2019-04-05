@@ -1226,6 +1226,7 @@ Example 2:
 
     moosh group-memberadd -g groupid memberid1 [memberid2] ...
 
+
 <span class="anchor" id="grouping-create"></span>
 <a class="command-name">grouping-create</a>
 -------------
@@ -1235,6 +1236,7 @@ Create a new grouping.
 Example:
 
     moosh grouping-create --description "grouping description" --id "grouping idnumber" groupingname courseid
+
 
 <span class="anchor" id="group-assigngrouping"></span>
 <a class="command-name">group-assigngrouping</a>
