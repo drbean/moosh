@@ -1237,7 +1237,6 @@ Example:
 
     moosh grouping-create --description "grouping description" --id "grouping idnumber" groupingname courseid
 
-
 <span class="anchor" id="group-assigngrouping"></span>
 <a class="command-name">group-assigngrouping</a>
 -------------
@@ -1247,44 +1246,6 @@ Add a group to a grouping.
 Example:
 
     moosh group-assigngrouping -G groupingid groupid1 [groupid2] ...
-
-
-<span class="anchor" id="group-memberadd"></span>
-<a class="command-name">group-memberadd</a>
--------------
-
-Add a member to a group.
-
-Example 1:
-
-    moosh group-memberadd -c courseid -g groupid membername1 [membername2] ...
-
-Example 2:
-
-    moosh group-memberadd -g groupid memberid1 [memberid2] ...
-
-
-<span class="anchor" id="grouping-create"></span>
-<a class="command-name">grouping-create</a>
--------------
-
-Create a new grouping.
-
-Example:
-
-    moosh grouping-create --description "grouping description" --id "grouping idnumber" groupingname courseid
-
-
-<span class="anchor" id="group-assigngrouping"></span>
-<a class="command-name">group-assigngrouping</a>
--------------
-
-Add a group to a grouping.
-
-Example:
-
-    moosh group-assigngrouping -G groupingid groupid1 [groupid2] ...
-
 
 <span class="anchor" id="info"></span>
 <a class="command-name">info</a>
