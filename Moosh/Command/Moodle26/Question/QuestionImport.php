@@ -84,18 +84,19 @@ class QuestionImport extends MooshCommand
         }
         $addonpage = 1;
         if (!empty($options['random'])) {
-            if (empty($options['tag'])) {
+            $tag_text = $options['tag'];
+            if (empty($tag_text)) {
                 print_error("No tag for choosing {$options['random']} random questions", '');
             }
 
-            $tag = \core_tag_tag::create_if_missing(7, array($options['tag']));
+            $tag = \core_tag_tag::create_if_missing(7, array($tag_text));
             if (empty($tag)){
-                print_error("No '$tag' tagid for '{$options['tag']}' tag\n", '');
+                print_error("No '$tag' tagid for '$tag_text' tag\n", '');
             }
             foreach ($qformat->questionids as $id) {
-                \core_tag_tag::set_item_tags('quiz_tag', 'question', $id, $quizcontext, array($options['tag']));
+                \core_tag_tag::set_item_tags('quiz_tag', 'question', $id, $quizcontext, array($tag_text));
             }
-            quiz_add_random_questions($quiz, $addonpage, $category_id, $options['random'], true, array($tag[$options['tag']]->id));
+            quiz_add_random_questions($quiz, $addonpage, $category_id, $options['random'], true, array($tag[$tag_text]->id));
         }
         else {
             foreach ($qformat->questionids as $addquestion) {
