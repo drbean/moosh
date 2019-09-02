@@ -37,9 +37,9 @@ class QuestionImport extends MooshCommand
         $this->checkFileArg($arguments[0]);
 
         $file = $arguments[0];
-        $quiz = $arguments[1];
+        $quiz_id = $arguments[1];
         $category_id = $arguments[2];
-        $quiz = $DB->get_record('quiz', array('id'=>$quiz),'*',MUST_EXIST);
+        $quiz = $DB->get_record('quiz', array('id'=>$quiz_id),'*',MUST_EXIST);
         $course = $DB->get_record('course', array('id'=>$quiz->course),'*',MUST_EXIST);
         $coursecontext = \context_course::instance($course->id);
         $coursemodule = get_coursemodule_from_instance('quiz',$quiz->id);
