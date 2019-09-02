@@ -30,6 +30,7 @@ class QuestionImport extends MooshCommand
         require_once($CFG->dirroot . '/question/import_form.php');
         require_once($CFG->dirroot . '/question/format.php');
         require_once($CFG->dirroot . '/lib/questionlib.php');
+        require_once($CFG->dirroot . '/mod/quiz/locallib.php');
 
         $options = $this->expandedOptions;
         $arguments = $this->arguments;
@@ -82,7 +83,6 @@ class QuestionImport extends MooshCommand
             print_error('cannotimport', '');
         }
         $addonpage = 1;
-        require_once($CFG->dirroot . '/mod/quiz/locallib.php');
         if (!empty($options['random'])) {
             if (empty($options['tag'])) {
                 print_error("No tag for choosing {$options['random']} random questions", '');
