@@ -96,6 +96,9 @@ class QuestionImport extends MooshCommand
             foreach ($qformat->questionids as $id) {
                 \core_tag_tag::set_item_tags('quiz_tag', 'question', $id, $quizcontext, array($tag_text));
             }
+	    if (empty($tag[$tag_text]->id)) {
+		    print_error("No tag[tag_text] object for '$tag[$tag_text]'\n", '')
+	    }
             quiz_add_random_questions($quiz, $addonpage, $category_id, $options['random'], true, array($tag[$tag_text]->id));
         }
         else {
