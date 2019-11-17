@@ -36,6 +36,8 @@ use core_analytics\course;
 class behat_moosh extends behat_base
 {
 
+
+
     /**
      *
      * @Then /^a record in table "(?P<table>.+)" with "(?P<cell1>.+)" = "(?P<val1>.+)" and "(?P<cel2>.+)" = "(?P<val2>.+)" exist$/
@@ -54,19 +56,19 @@ class behat_moosh extends behat_base
      */
     public function moosh_command_return_id($command, $match)
     {
-        $id = $this->modified_match($match);
+        $id = $this->modified_command($match);
         $output = null;
         $ret = null;
         $output = exec("php /var/www/html/moosh/moosh.php $command", $output, $ret);
         if($output==$id){
-            echo "***moosh command output***\nId from created course ". $id . "\n***\n";;
+            echo "***moosh command output***\nId - ". $id . "\n***\n";;
         }else{
             throw new ExpectationException("Failure! Id $id does not match $output", $this->getSession());
         }
     }
     /**
      *
-     * @Then /^there are "(\d+)" "(?P<shortname>.+)" courses added to database$/
+     * @Then /^there are "(\d+)" "(?P<shortname>.+)" record added to database$/
      */
     public function moosh_command_cout_how_many_are_added($value, $shortname)
     {
@@ -75,6 +77,25 @@ class behat_moosh extends behat_base
         $sql= "SELECT COUNT(id)
                 FROM {course}
                 WHERE shortname LIKE ?";
+        $course_count = $DB->count_records_sql($sql, array($shortname));
+        if($course_count==$value) {
+            echo "$shortname moosh command output\nNumber of added courses ". $value . "\n***\n";
+        }else{
+            throw new ExpectationException("Failure! $course_count the number of rows created does not match $value.a the number added to the database", $this->getSession());
+        }
+    }
+
+    /**
+     *
+     * @Then /^there are "(\d+)" "(?P<shortname>.+)" category added to database$/
+     */
+    public function moosh_command_cout_how_many_are_added_category($value, $shortname)
+    {
+        global $DB;
+        $shortname.='%';
+        $sql= "SELECT COUNT(id)
+                FROM {course_categories}
+                WHERE name LIKE ?";
         $course_count = $DB->count_records_sql($sql, array($shortname));
         if($course_count==$value) {
             echo "$shortname moosh command output\nNumber of added courses ". $value . "\n***\n";
@@ -102,7 +123,7 @@ class behat_moosh extends behat_base
     public function moosh_command_returns($command, $match)
     {
         $command = $this->modified_command($command);
-        $match = $this->modified_match($match);
+        $match = $this->modified_command($match);
         $output = null;
         $ret = null;
         exec("php /var/www/html/moosh/moosh.php $command", $output, $ret);
@@ -125,7 +146,7 @@ class behat_moosh extends behat_base
     public function moosh_command_does_not_contain($command, $match)
     {
         $command = $this->modified_command($command);
-        $match = $this->modified_match($match);
+        $match = $this->modified_command($match);
         $output = null;
         $ret = null;
         exec("php /var/www/html/moosh/moosh.php $command", $output, $ret);
@@ -163,10 +184,6 @@ class behat_moosh extends behat_base
             $subcommand = explode('%', $input);
             $subcommand_length = count($subcommand);
 
-            //$table = explode('-', $subcommand[0]);
-            //$table_name = explode('.', $subcommand);
-
-            //$temp=$table[0];
             for ($i = 0; $i < $subcommand_length; $i++) {
                 if (strpos($subcommand[$i], ":") !== false) {
                     $table_name = explode('.', $subcommand[$i]);
@@ -187,24 +204,5 @@ class behat_moosh extends behat_base
         }
     }
 
-    /**
-     *
-     * @param string $input
-     * @return string $command
-     */
-    private function modified_match($input)
-    {
-        global $DB;
-        if(strchr($input, "%")!==false) {
-            $submatch = explode('%', $input);
-            $tablematch = explode(':', $submatch[1]);
-            $courseid = $DB->get_field('course', 'id', array($tablematch[0] => $tablematch[1]), MUST_EXIST);
-            $pattern = '/(%)(\w+)(:)(\w+)(%)/';
-            $command = preg_replace($pattern, $courseid, $input);
-            return $command;
-        }else{
-            $command = $input;
-            return $command;
-        }
-    }
+
 }
