@@ -20,9 +20,6 @@ class GradeItemCreate extends MooshCommand {
         $this->addOption('m|grademax:', 'maximum grade', '100');
         $this->addOption('m|gradetype:', 'grade type (0 = none, 1 = value, 2 = scale, 3 = text)', '1');
         $this->addOption('c|calculation:', 'gradecalculation from other items', null);
-        $this->addOption('e|empty:', 'show only scoreless grade items: all/yes/no if empty', 'all');
-        $this->addOption('f|fields:', 'show only those fields in the output (comma separated)');
-        $this->addOption('o|output:', 'output format: tab, csv', 'csv');
 
         $this->addArgument('courseid');
         $this->addArgument('categoryid');
