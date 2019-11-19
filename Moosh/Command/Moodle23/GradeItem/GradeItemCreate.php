@@ -17,7 +17,7 @@ class GradeItemCreate extends MooshCommand {
 
         $this->addOption('t|itemtype', 'mod/manual/"" etc', 'manual');
         $this->addOption('n|itemname', 'item name', 'Grade');
-        $this->addOption('h|hidden:', 'show all/yes/no if hidden', 'all');
+        $this->addOption('m|grademax:', 'maximum grade', '100');
         $this->addOption('l|locked:', 'show all/yes/no if locked', 'all');
         $this->addOption('e|empty:', 'show only scoreless grade items: all/yes/no if empty', 'all');
         $this->addOption('f|fields:', 'show only those fields in the output (comma separated)');
