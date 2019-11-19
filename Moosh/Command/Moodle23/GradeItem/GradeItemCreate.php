@@ -44,7 +44,7 @@ class GradeItemCreate extends MooshCommand {
         $options = $this->expandedOptions;
 
         // $params = NULL;
-        $params = array("courseid" => 39, "categoryid" => 554, "grademax" => 3, "itemname" => 'item name test', "itemtype" => "");
+        $params = array("courseid" => 39, "categoryid" => 554, "grademax" => 3, "itemname" => 'item name test', "itemtype" => "manual");
 
         $grade_item = new \grade_item($params, false);
         echo print_r($grade_item) . "\n";
@@ -52,7 +52,7 @@ class GradeItemCreate extends MooshCommand {
         //echo print_r($fetched_item) . "\n";
         echo false ."\n";
         echo true ."\n";
-        $grade_item->insert();
+        $grade_item->insert('manual');
 
         echo $grade_item->id . "\n";
 
