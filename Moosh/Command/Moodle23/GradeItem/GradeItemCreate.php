@@ -10,6 +10,8 @@
 namespace Moosh\Command\Moodle23\GradeItem;
 use Moosh\MooshCommand;
 
+use GetOptionKit\Argument;
+
 class GradeItemCreate extends MooshCommand {
     public function __construct() {
 
@@ -19,7 +21,8 @@ class GradeItemCreate extends MooshCommand {
         $this->addOption('n|itemname', 'item name', 'Grade');
         $this->addOption('m|grademax:', 'maximum grade', '100');
         $this->addOption('m|gradetype:', 'grade type (0 = none, 1 = value, 2 = scale, 3 = text)', '1');
-        $this->addOption('c|calculation:', 'gradecalculation from other items', null);
+        $this->addOption('c|calculation:', 'grade calculation from other items', null);
+        $this->addOption('o|options:', 'any other options that should be passed for grade item creation', null);
 
         $this->addArgument('courseid');
         $this->addArgument('categoryid');
@@ -38,14 +41,30 @@ class GradeItemCreate extends MooshCommand {
             $this->expandOptionsManually(array($argument));
         }
 
+        $itemdata = new \stdClass();
+        $itemdata->courseid = $this->arguments[1];
+        $itemdata->categoryid = $this->arguments[2];
+
         $this->expandOptions();
 
         $options = $this->expandedOptions;
 
-        // $params = NULL;
-        $params = array("courseid" => 39, "categoryid" => 554, "grademax" => 3, "itemname" => 'item name test', "itemtype" => "manual");
+        if (!empty($options['options'])) {
+            $item_options = preg_split( '/\s+(?=--)/', $options['options']);
+            foreach ( $item_options as $option ) {
+                $arg = new Argument( $option );
+                $name = $this->getOptionName($arg);
+                $value = $arg->getOptionValue();
+                $itemdata->$name = $value;
+                if ($this->verbose) {
+                    echo "\"$option\" -> $name=" . $value . "\n";
+                }
+            }
+        }
 
-        $grade_item = new \grade_item($params, false);
+        // $params = NULL;
+
+        $grade_item = new \grade_item($itemdata, false);
         echo print_r($grade_item) . "\n";
         //$fetched_item = $grade_item->fetch($params);
         //echo print_r($fetched_item) . "\n";
@@ -180,6 +199,13 @@ class GradeItemCreate extends MooshCommand {
             } elseif ($options['output'] == 'tab') {
                 echo implode("\t", $line) . "\n";
             }
+        }
+    }
+
+    private function getOptionName($arg)
+    {
+        if (preg_match('/^[-]+([_a-zA-Z0-9-]+)/', $arg->arg, $regs)) {
+            return $regs[1];
         }
     }
 }
