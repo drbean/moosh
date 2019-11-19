@@ -52,7 +52,8 @@ class GradeItemCreate extends MooshCommand {
         //echo print_r($fetched_item) . "\n";
         echo false ."\n";
         echo true ."\n";
-        $grade_item->insert('manual');
+        $source = 'manual';
+        $grade_item->insert($source);
 
         echo $grade_item->id . "\n";
 
