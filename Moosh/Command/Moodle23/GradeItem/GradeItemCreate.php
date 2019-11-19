@@ -15,7 +15,7 @@ class GradeItemCreate extends MooshCommand {
 
         parent::__construct('create', 'gradeitem');
 
-        $this->addOption('i|id', 'display id column only');
+        $this->addOption('t|itemtype', 'mod/manual/"" etc', 'manual');
         $this->addOption('h|hidden:', 'show all/yes/no if hidden', 'all');
         $this->addOption('l|locked:', 'show all/yes/no if locked', 'all');
         $this->addOption('e|empty:', 'show only scoreless grade items: all/yes/no if empty', 'all');
