@@ -10,10 +10,6 @@
 namespace Moosh\Command\Moodle23\GradeItem;
 use Moosh\MooshCommand;
 
-        require_once('lib/grade/grade_category.php');
-        require_once('lib/grade/grade_item.php');
-
-
 class GradeItemCreate extends MooshCommand {
     public function __construct() {
 
@@ -35,11 +31,7 @@ class GradeItemCreate extends MooshCommand {
     public function execute() {
         global $CFG, $DB;
 
-        require_once($CFG->libdir . '/grade/grade_category.php');
         require_once($CFG->libdir . '/grade/grade_item.php');
-        require_once($CFG->libdir . '/grade/grade_grade.php');
-        require_once($CFG->libdir . '/grade/grade_scale.php');
-        require_once($CFG->libdir . '/grade/grade_outcome.php');
         require_once($CFG->libdir . '/gradelib.php');
 
 
