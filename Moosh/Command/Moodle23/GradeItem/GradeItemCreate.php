@@ -17,10 +17,10 @@ class GradeItemCreate extends MooshCommand {
 
         parent::__construct('create', 'gradeitem');
 
-        $this->addOption('t|itemtype', 'mod/manual/"" etc', 'manual');
-        $this->addOption('n|itemname', 'item name', 'Grade');
+        $this->addOption('t|itemtype:', 'mod/manual/"" etc', 'manual');
+        $this->addOption('n|itemname:', 'item name', 'Grade');
         $this->addOption('m|grademax:', 'maximum grade', '100');
-        $this->addOption('m|gradetype:', 'grade type (0 = none, 1 = value, 2 = scale, 3 = text)', '1');
+        $this->addOption('g|gradetype:', 'grade type (0 = none, 1 = value, 2 = scale, 3 = text)', '1');
         $this->addOption('c|calculation:', 'grade calculation from other items', null);
         $this->addOption('o|options:', 'any other options that should be passed for grade item creation', null);
 
@@ -37,35 +37,33 @@ class GradeItemCreate extends MooshCommand {
         require_once($CFG->libdir . '/gradelib.php');
 
 
-        foreach ($this->arguments as $argument) {
-            $this->expandOptionsManually(array($argument));
-        }
-
         $itemdata = new \stdClass();
-        $itemdata->courseid = $this->arguments[1];
-        $itemdata->categoryid = $this->arguments[2];
-
-        $this->expandOptions();
+        $itemdata->courseid = $this->arguments[0];
+        $itemdata->categoryid = $this->arguments[1];
+        $itemdata->itemtype = 'manual';
 
         $options = $this->expandedOptions;
 
-        if (!empty($options['options'])) {
-            $item_options = preg_split( '/\s+(?=--)/', $options['options']);
-            foreach ( $item_options as $option ) {
-                $arg = new Argument( $option );
-                $name = $this->getOptionName($arg);
-                $value = $arg->getOptionValue();
-                $itemdata->$name = $value;
-                if ($this->verbose) {
-                    echo "\"$option\" -> $name=" . $value . "\n";
+        foreach ($options as $k => $v) {
+            if ($k == 'options' && !empty($v)) {
+                $item_options = preg_split( '/\s+(?=--)/', $v);
+                foreach ( $item_options as $option ) {
+                    $arg = new Argument( $option );
+                    $name = $this->getOptionName($arg);
+                    $value = $arg->getOptionValue();
+                    $itemdata->$name = $value;
+                    if ($this->verbose) {
+                        echo "\"$option\" -> $name=" . $value . "\n";
+                    }
                 }
             }
+            else { $itemdata->$k = $v; }
         }
 
         // $params = NULL;
 
         $grade_item = new \grade_item($itemdata, false);
-        echo print_r($grade_item) . "\n";
+        echo print_r($itemdata) . "\n";
         //$fetched_item = $grade_item->fetch($params);
         //echo print_r($fetched_item) . "\n";
         echo false ."\n";
