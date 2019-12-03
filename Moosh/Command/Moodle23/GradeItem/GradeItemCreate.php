@@ -40,7 +40,7 @@ class GradeItemCreate extends MooshCommand {
         $itemdata = new \stdClass();
         $itemdata->courseid = $this->arguments[0];
         $itemdata->categoryid = $this->arguments[1];
-        $itemdata->itemtype = 'manual';
+        ## $itemdata->itemtype = 'manual';
 
         $options = $this->expandedOptions;
 
@@ -52,9 +52,6 @@ class GradeItemCreate extends MooshCommand {
                     $name = $this->getOptionName($arg);
                     $value = $arg->getOptionValue();
                     $itemdata->$name = $value;
-                    if ($this->verbose) {
-                        echo "\"$option\" -> $name=" . $value . "\n";
-                    }
                 }
             }
             else { $itemdata->$k = $v; }
@@ -63,142 +60,14 @@ class GradeItemCreate extends MooshCommand {
         // $params = NULL;
 
         $grade_item = new \grade_item($itemdata, false);
-        echo print_r($itemdata) . "\n";
-        //$fetched_item = $grade_item->fetch($params);
-        //echo print_r($fetched_item) . "\n";
-        echo false ."\n";
-        echo true ."\n";
+
+        if ($this->verbose) {
+            echo print_r($itemdata) . "\n";
+        }
         $source = 'manual';
         $grade_item->insert($source);
 
         echo $grade_item->id . "\n";
-
-        //$sql = "SELECT * ";
-        //$sql .= "FROM {grade_items} i ";
-        //$sql .= "WHERE '1'='1' ";
-
-        //// Glue arguments together, so end user does not need to provide single argument.
-        //if (isset($this->arguments[0]) && $this->arguments[0]) {
-        //    $customwhere = implode(' ', $this->arguments);
-        //    $sql .= " AND ($customwhere)";
-        //}
-
-        //if($this->verbose) {
-        //   cli_problem("SQL query run: $sql");
-        //   cli_problem("Params:");
-        //   cli_problem(var_export($params, true));
-        //}
-
-        //$gradeitems = $DB->get_records_sql($sql, $params);
-
-        //$this->display($gradeitems);
-
-    }
-
-    private function has_grade($item_id) {
-        global $DB;
-        if ($records = $DB->get_records('grade_grades', array("itemid" => $item_id))) {
-            foreach ($records as $record) {
-                if (isset( $record->rawgrade ) ) {
-                    return true;
-                }
-            }
-        }
-        else { return false; }
-    }
-
-    private function get_category_path($id, $parentname = NULL) {
-        global $DB;
-
-        if ($parentcategory = $DB->get_record('grade_categories', array("id" => $id))) {
-            if ($parentcategory->parent > 0) {
-                $parentname .= $this->get_category_path($parentcategory->parent, $parentname);
-            } else {
-                $parentname .= "Top";
-            }
-            $parentname .= "/" . $parentcategory->fullname;
-        }
-        return $parentname;
-
-    }
-
-    protected function display($gradeitems, $json = false, $humanreadable = true) {
-
-        $options = $this->expandedOptions;
-        $fields = NULL;
-        if ($options['fields']) {
-            $fields = str_getcsv($options["fields"]);
-            $fields = array_combine($fields, $fields);
-        }
-
-        $outputheader = $outputcontent = "";
-        $doheader = 0;
-        $header = array();
-        $output = array();
-        foreach ($gradeitems as $item) {
-            $line = array();
-            if ($options['hidden'] == 'yes' && $item->hidden == 0) {
-                continue;
-            }
-            if ($options['hidden'] == 'no' && $item->hidden != 0) {
-                continue;
-            }
-            if ($options['locked'] == 'yes' && $item->locked == 0) {
-                continue;
-            }
-            if ($options['locked'] == 'no' && $item->locked != 0) {
-                continue;
-            }
-            $id = $item->id;
-            if ($options['empty'] == 'yes' && $this->has_grade($id) == true) {
-                continue;
-            }
-            if ($options['empty'] == 'no' && $this->has_grade($id) == false) {
-                continue;
-            }
-            if ($options['id']) {
-                echo $id . "\n";
-                continue;
-            }
-            foreach ($item as $field => $value) {
-                if ($fields && !isset($fields[$field])) {
-                    continue;
-                }
-                if ($doheader == 0) {
-                    $header[] = $field;
-                    //$outputheader .= str_pad($field, 20);
-                }
-                if ($field == "categoryid" && $value > 0) {
-                    $value = $this->get_category_path($value);
-                } elseif ($field == "categoryid") {
-                    $value = "Top";
-                }
-                $line[] = $value;
-                //$outputcontent .= str_pad($value, 20);
-            }
-            $output[] = $line;
-            //$outputcontent .= "\n";
-            $doheader++;
-        }
-        if (!$options['id']) {
-            array_unshift($output, $header);
-            //$outputheader .= "\n";
-            //echo $outputheader;
-        }
-        //echo $outputcontent;
-        foreach ($output as $line) {
-            if ($options['output'] == 'csv') {
-
-                foreach ($line as $k => $l) {
-                    $line[$k] = "\"$l\"";
-                }
-                echo implode(',', $line) . "\n";
-
-            } elseif ($options['output'] == 'tab') {
-                echo implode("\t", $line) . "\n";
-            }
-        }
-    }
 
     private function getOptionName($arg)
     {
