@@ -1163,6 +1163,16 @@ Example:
 
     moosh gradecategory-list --hidden=yes --empty=yes --fields=id,parent,fullname courseid=26
 
+<span class="anchor" id="gradeitem-create"></span>
+<a class="command-name">gradeitem-create</a>
+---------------
+
+Creates grade items, with command-line options and courseid, gradecategoryid arguments.
+
+Example:
+
+    moosh gradeitem-create --itemname=Boost --grademax=3 --calculation='=max(3, [[point]]' -o '--aggregationcoef=1' 37 527
+
 <span class="anchor" id="gradeitem-list"></span>
 <a class="command-name">gradeitem-list</a>
 ---------------
