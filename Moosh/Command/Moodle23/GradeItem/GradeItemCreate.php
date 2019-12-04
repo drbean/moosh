@@ -68,6 +68,7 @@ class GradeItemCreate extends MooshCommand {
         $grade_item->insert($source);
 
         echo $grade_item->id . "\n";
+    }
 
     private function getOptionName($arg)
     {
