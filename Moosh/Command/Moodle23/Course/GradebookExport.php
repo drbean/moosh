@@ -17,7 +17,7 @@ class GradebookExport extends MooshCommand
 
         //$this->addArgument('name');
 
-        $this->addOption('c|id:', 'course id', 26);
+        $this->addOption('c|id:', 'course id', null);
         $this->addOption('i|itemids:', 'exercise grade ids', null);
         $this->addOption('g|groupid:', 'group id', 0);
         $this->addOption('x|exportfeedback:', 'exportfeedback', 0);
