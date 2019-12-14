@@ -27,8 +27,11 @@ class GradebookExport extends MooshCommand
         $this->addOption('s|separator:', 'separator, eg, tab, comma', 'comma');
         $this->addOption('f|format:', 'export format, ie, ods, txt, xls, xml', 'txt');
 
+        $this->addArgument('grade_item_id(s)');
+        $this->addArgument('course_id');
 
-
+        $this->minArguments = 2;
+        $this->maxArguments = 2;
     }
 
     public function execute()
@@ -54,13 +57,10 @@ class GradebookExport extends MooshCommand
         //  $this->pluginInfo - array with information about the current plugin (based on cwd), keys:'type','name','dir'
         //  $this->verbose - if set to true, then "moosh -v" was run - add more verbose / debug information
 
+        $itemids = $this->arguments[0];
+        $id = $this->arguments[1];
+
         $options = $this->expandedOptions;
-        if (!empty($options['id'])) {
-            $id = $options['id'];
-        }
-        if (!empty($options['itemids'])) {
-            $itemids = $options['itemids'];
-        }
         if (isset($options['groupid'])) {
             $groupid = $options['groupid'];
         }

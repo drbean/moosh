@@ -1187,16 +1187,14 @@ Example:
 <a class="command-name">gradebook-export</a>
 ---------------
 
-Exports gradebook grades for specified course and grade items.
+Exports gradebook grades for grade item(s) (comma-separated if more than 1) in specified course.
 
 Example:
 
-    moosh gradebook-export -c 40 -i 4755,4756 -g 0 -x 1 -a 1 -d 2 -p 0 -s comma -f txt > grades.csv
+    moosh gradebook-export -g 0 -x 1 -a 1 -d 2 -p 0 -s comma -f txt 4755,4756 40 > grades.csv
 
 Options and defaults:
 
-* 'course id': null
-* 'item id(s)': null
 * 'group id': 0
 * 'exportfeedback': 0
 * 'onlyactive': 1
