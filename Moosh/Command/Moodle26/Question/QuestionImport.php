@@ -17,6 +17,7 @@ class QuestionImport extends MooshCommand
         parent::__construct('import', 'question');
         $this->addOption('r|random:', 'random number of (tagged) questions from the category', NULL);
         $this->addOption('t|tag:', 'tag on questions from the category', NULL);
+        $this->addOption('c|collection:', 'id of tag collection with tag', NULL);
         $this->addArgument('questions.xml');
         $this->addArgument('quiz_id');
         $this->addArgument('question_category_id');
@@ -85,11 +86,12 @@ class QuestionImport extends MooshCommand
         $addonpage = 1;
         if (!empty($options['random'])) {
             $tag_text = $options['tag'];
+            $tagcollid = $options['collection'];
             if (empty($tag_text)) {
                 print_error("No tag for choosing {$options['random']} random questions", '');
             }
 
-            $tag = \core_tag_tag::create_if_missing(16, array($tag_text));
+            $tag = \core_tag_tag::create_if_missing($tagcollid, array($tag_text));
             if (empty($tag)){
                 print_error("No '$tag' tagid for '$tag_text' tag\n", '');
             }
