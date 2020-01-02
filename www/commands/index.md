@@ -1171,7 +1171,7 @@ Creates grade items, with command-line options and courseid, gradecategoryid arg
 
 Example:
 
-    moosh gradeitem-create --itemname=Boost --grademax=3 --calculation='=max(3, [[point]]' -o '--aggregationcoef=1' 37 527
+    moosh gradeitem-create --itemname=Boost --grademax=3 --calculation='=max(3, ##gi5075##)' -o '--aggregationcoef=1' 37 527
 
 <span class="anchor" id="gradeitem-list"></span>
 <a class="command-name">gradeitem-list</a>
@@ -1389,11 +1389,15 @@ Example:
 <a class="command-name">plugin-install</a>
 ----------------
 
-Download and install plugin. Requires plugin short name, and plugin version. You can obtain those data by using `plugin-list -v' command.
+Download and install plugin. Requires plugin short name, and optional version. You can obtain those data by using `plugin-list -v' command.
 
-Example:
+Example 1: install a specific version
 
-    moosh plugin-install mod_quickmail 20160101
+    moosh plugin-install --release 20160101 mod_quickmail
+
+Example 2: install the latest release supported by current moodle version
+
+    moosh plugin-install block_checklist
 
 
 <span class="anchor" id="plugin-list"></span>
