@@ -31,8 +31,14 @@ class ActivityMove extends MooshCommand
         if ($moduleid <= 0) {
             cli_error("Argument 'moduleid' must be bigger than 0.");
         } 
+	$module = $DB->get_record('course_modules', array('id' => $moduleid));
+        if ( empty($module) ) {
+            cli_error("There is no such activity to delete.");
+        }
 
-	list($course, $module) = get_course_and_cm_from_instance($moduleid, 'quiz', 40);
+	$courseid = $module->course;
+	$course = $DB->get_record('course', array('id' => $courseid));
+
 	$section = get_fast_modinfo($course)->cms[$moduleid]->section;
 	moveto_module($module, $section, $beforemodid);
         echo "Moved activity $moduleid\n";
