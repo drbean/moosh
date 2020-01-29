@@ -8,13 +8,16 @@
 namespace Moosh\Command\Moodle25\Activity;
 use Moosh\MooshCommand;
 
-class ActivityDelete extends MooshCommand
+class ActivityMove extends MooshCommand
 {
     public function __construct()
     {
-        parent::__construct('delete', 'activity');
+        parent::__construct('move', 'activity');
+
+        $this->addOption('i|idnumber:', 'idnumber', null);
 
         $this->addArgument('moduleid');
+        $this->addArgument('beforemodid');
     }
 
     public function execute() 
@@ -23,17 +26,16 @@ class ActivityDelete extends MooshCommand
         require_once $CFG->dirroot . '/course/lib.php';
 
         $moduleid = intval($this->arguments[0]);
-
+        $beforemodid = intval($this->arguments[1]);
 
         if ($moduleid <= 0) {
             cli_error("Argument 'moduleid' must be bigger than 0.");
         } 
-        if (!$DB->get_record('course_modules', array('id' => $this->arguments[0]))) {
-            cli_error("There is no such activity to delete.");
-        }
 
-        course_delete_module($moduleid);
-        echo "Deleted activity $moduleid\n";
+	list($course, $module) = get_course_and_cm_from_cmid($moduleid);
+	$section = get_fast_modinfo($course)->cms[$moduleid]->section;
+	moveto_module($module, $section, $beforemodid);
+        echo "Moved activity $moduleid\n";
     }
 }
 
