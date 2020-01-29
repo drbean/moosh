@@ -32,7 +32,7 @@ class ActivityMove extends MooshCommand
             cli_error("Argument 'moduleid' must be bigger than 0.");
         } 
 
-	list($course, $module) = get_course_and_cm_from_cmid($moduleid);
+	list($course, $module) = get_course_and_cm_from_instance($moduleid, 'quiz', 40);
 	$section = get_fast_modinfo($course)->cms[$moduleid]->section;
 	moveto_module($module, $section, $beforemodid);
         echo "Moved activity $moduleid\n";
