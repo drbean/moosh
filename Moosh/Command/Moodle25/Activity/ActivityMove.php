@@ -14,16 +14,21 @@ class ActivityMove extends MooshCommand
     {
         parent::__construct('move', 'activity');
 
-        $this->addOption('i|idnumber:', 'idnumber', null);
+        $this->addOption('s|sectionnumber:=number', 'sectionnumber', null);
 
         $this->addArgument('moduleid');
         $this->addArgument('beforemodid');
+
+        $this->minArguments = 1;
+        $this->maxArguments = 2;
     }
 
     public function execute() 
     {
         global $CFG, $DB;
         require_once $CFG->dirroot . '/course/lib.php';
+
+        $options = $this->expandedOptions;
 
         $moduleid = intval($this->arguments[0]);
         $beforemodid = intval($this->arguments[1]);
