@@ -42,9 +42,18 @@ class ActivityMove extends MooshCommand
         }
 
 	$courseid = $module->course;
-	$sectionid = $module->section;
 	$course = $DB->get_record('course', array('id' => $courseid));
-	$section = $DB->get_record('course_sections', array('id' => $sectionid));
+
+        if (!empty($options['sectionnumber'])) {
+            $sectionnumber = $options['sectionnumber'];
+	    $section = $DB->get_record('course_sections', array(
+		    'section' => $sectionnumber,
+			'course' => $courseid));
+        }
+	else {
+		$sectionid = $module->section;
+		$section = $DB->get_record('course_sections', array('id' => $sectionid));
+	}
 
 	moveto_module($module, $section, $beforemodid);
         echo "Moved activity $moduleid\n";
