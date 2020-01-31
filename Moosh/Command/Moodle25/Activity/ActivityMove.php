@@ -31,7 +31,6 @@ class ActivityMove extends MooshCommand
         $options = $this->expandedOptions;
 
         $moduleid = intval($this->arguments[0]);
-        $beforemodid = intval($this->arguments[1]);
 
         if ($moduleid <= 0) {
             cli_error("Argument 'moduleid' must be bigger than 0.");
@@ -55,7 +54,14 @@ class ActivityMove extends MooshCommand
             $destinesection = $DB->get_record('course_sections', array('id' => $sectionid));
         }
 
-        moveto_module($module, $destinesection, $beforemodid);
+        if ( !empty($this->arguments[1]) ) {
+            $beforemodid = intval($this->arguments[1]);
+            moveto_module($module, $destinesection, $beforemodid);
+        }
+        else {
+            moveto_module($module, $destinesection);
+
+        }
         echo "Moved activity $moduleid\n";
     }
 }
