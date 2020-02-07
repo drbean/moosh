@@ -6,7 +6,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace Moosh\Command\Moodle26\Activity;
+namespace Moosh\Command\Moodle23\Activity;
 use Moosh\MooshCommand;
 
 class ActivityConfigSet extends MooshCommand
