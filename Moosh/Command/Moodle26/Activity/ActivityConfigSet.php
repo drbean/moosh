@@ -13,17 +13,17 @@ use Moosh\MooshCommand;
 use GetOptionKit\Argument;
 
 /**
- * Adds a new activity to the specified course
+ * Updates an activity
  *
  * @copyright 2013 David Monllaó
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class ActivityAdd extends MooshCommand
+class ActivityConfigSet extends MooshCommand
 {
 
     public function __construct()
     {
-        parent::__construct('add', 'activity');
+        parent::__construct('config-set', 'activity');
 
         $this->addOption('n|name:', 'activity instance name');
         $this->addOption('s|section:', 'section number', '1');
@@ -31,10 +31,9 @@ class ActivityAdd extends MooshCommand
         $this->addOption('c|gradecat:', 'gradecategory id', null);
         $this->addOption('o|options:', 'any options that should be passed for activity creation', null);
 
-        $this->addArgument('activitytype');
-        $this->addArgument('course');
+        $this->addArgument('coursemoduleid');
 
-        $this->minArguments = 2;
+        $this->minArguments = 1;
     }
 
     /**
