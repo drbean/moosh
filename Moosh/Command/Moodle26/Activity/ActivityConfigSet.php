@@ -45,7 +45,7 @@ class ActivityConfigSet extends MooshCommand
                 $course_mod_list = get_course_mods($this->arguments[1]/* courseid */);
                 $activitylist = array();
                 foreach ($course_mod_list as $mod) {
-                   if ( $mod->modname = $modulename ) {
+                   if ( $mod->modname == $modulename ) {
                        $activitylist[] = $mod;
                    }
                 }
