@@ -6,65 +6,77 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace Moosh\Command\Moodle23\Course;
+namespace Moosh\Command\Moodle26\Activity;
 use Moosh\MooshCommand;
 
-class CourseConfigSet extends MooshCommand
+class ActivityConfigSet extends MooshCommand
 {
     public function __construct()
     {
-        parent::__construct('config-set', 'course');
+        parent::__construct('config-set', 'activity');
 
         $this->addArgument('mode');
         $this->addArgument('id');
+        $this->addArgument('module');
         $this->addArgument('setting');
         $this->addArgument('value');
+
+        $this->minArguments = 5;
     }
 
     public function execute()
     {
-        $setting = trim($this->arguments[2]);
-        $value = trim($this->arguments[3]);
+        $mode = $this->arguments[0];
+        $activityid = $this->arguments[1];
+        $modulename = $this->arguments[2];
+        $setting = trim($this->arguments[3]);
+        $value = trim($this->arguments[4]);
 
 
         switch ($this->arguments[0]) {
-            case 'course':
-                if(!self::setCourseSetting($this->arguments[1]/* courseid */,$setting,$value)){
+            case 'activity':
+                if(!self::setActivitySetting($modulename, $this->arguments[1]/* activityid */,$setting,$value)){
                 	// the setting was not applied, exit with a non-zero exit code
                 	cli_error('');
                 }
                 break;
-            case 'category':
-                //get all courses in category (recursive)
-                $courselist = get_courses($this->arguments[1]/* categoryid */,'','c.id');
+            case 'course':
+                //get all activities in the course
+                $course_mod_list = get_course_mods($this->arguments[1]/* courseid */);
+                $activitylist = array();
+                foreach ($course_mod_list as $mod) {
+                   if ( $mod->modname = $modulename ) {
+                       $activitylist[] = $mod;
+                   }
+                }
                 $succeeded = 0;
                 $failed = 0;
-                foreach ($courselist as $course) {
-                    if(self::setCourseSetting($course->id,$setting,$value)){
+                foreach ($activitylist as $activity) {
+                    if(self::setActivitySetting($modulename,$activity->instance,$setting,$value)){
                         $succeeded++;
                     }else{
                         $failed++;
                     }
                 }
                 if($failed == 0){
-                    echo "OK - successfully modified $succeeded courses\n";
+                    echo "OK - successfully modified $succeeded activities\n";
                 }else{
-                    echo "WARNING - failed to mofify $failed courses (successfully modified $succeeded)\n";
+                    echo "WARNING - failed to mofify $failed activities (successfully modified $succeeded)\n";
                 }
                 break;
         }
 
     }
 
-    private function setCourseSetting($courseid,$setting,$value) {
+    private function setActivitySetting($modulename,$activityid,$setting,$value) {
         
         global $DB;
         
-        if ($DB->set_field('course',$setting,$value,array('id'=>$courseid))) {
-            echo "OK - Set $setting='$value' (courseid={$courseid})\n";
+        if ($DB->set_field($modulename,$setting,$value,array('id'=>$activityid))) {
+            echo "OK - Set $setting='$value' ($modulename activityid={$activityid})\n";
             return true;
         } else {
-            echo "ERROR - failed to set $setting='$value' (courseid={$courseid})\n";
+            echo "ERROR - failed to set $setting='$value' ($modulename activityid={$activityid})\n";
             return false;
         }
 
@@ -72,7 +84,7 @@ class CourseConfigSet extends MooshCommand
 
     protected function getArgumentsHelp()
     {
-        return "\n\nARGUMENTS:\n\tcourse courseid setting value\n\tOr...\n\tcategory categoryid[all] setting value";
+        return "\n\nARGUMENTS:\n\tactivity activityid module setting value\n\tOr...\n\tcourse courseid[all] module setting value";
     }
 
 }
