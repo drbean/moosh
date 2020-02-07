@@ -27,7 +27,7 @@ class ActivityConfigSet extends MooshCommand
     public function execute()
     {
         $mode = $this->arguments[0];
-        $activityid = $this->arguments[1];
+        $id = $this->arguments[1];
         $modulename = $this->arguments[2];
         $setting = trim($this->arguments[3]);
         $value = trim($this->arguments[4]);
@@ -35,14 +35,14 @@ class ActivityConfigSet extends MooshCommand
 
         switch ($this->arguments[0]) {
             case 'activity':
-                if(!self::setActivitySetting($modulename, $this->arguments[1]/* activityid */,$setting,$value)){
+                if(!self::setActivitySetting($modulename, $id/* activityid */,$setting,$value)){
                 	// the setting was not applied, exit with a non-zero exit code
                 	cli_error('');
                 }
                 break;
             case 'course':
                 //get all activities in the course
-                $course_mod_list = get_course_mods($this->arguments[1]/* courseid */);
+                $course_mod_list = get_course_mods($id/* courseid */);
                 $activitylist = array();
                 foreach ($course_mod_list as $mod) {
                    if ( $mod->modname == $modulename ) {
