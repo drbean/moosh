@@ -46,20 +46,19 @@ class ActivityConfigSet extends MooshCommand
                 break;
             case 'course':
                 //get all activities in the course
-                $course_mod_info = get_fast_modinfo($id/* courseid */)->get_instances_of($modulename);
-                $course_mod_list = array_values( $course_mod_info );
-                $activitylist = array();
-                foreach ($course_mod_list as $mod) {
+                $our_mod_info = get_fast_modinfo($id/* courseid */)->get_instances_of($modulename);
+                $updatelist = array();
+                foreach ($our_mod_info as $instance => $mod) {
                     if ( empty( $sectionnumber ) ) {
-                        $activitylist[] = $mod;
+                        $updatelist[] = $mod;
                     }
                     elseif ( !empty($sectionnumber) and $mod->sectionnum == $sectionnumber ) {
-                        $activitylist[] = $mod;
-                        }
+                        $updatelist[] = $mod;
+                    }
                 }
                 $succeeded = 0;
                 $failed = 0;
-                foreach ($activitylist as $activity) {
+                foreach ($updatelist as $activity) {
                     if(self::setActivitySetting($modulename,$activity->instance,$setting,$value)){
                         $succeeded++;
                     }else{
@@ -69,7 +68,7 @@ class ActivityConfigSet extends MooshCommand
                 if($failed == 0){
                     echo "OK - successfully modified $succeeded activities\n";
                 }else{
-                    echo "WARNING - failed to mofify $failed activities (successfully modified $succeeded)\n";
+                    echo "WARNING - failed to modify $failed activities (successfully modified $succeeded)\n";
                 }
                 break;
         }
