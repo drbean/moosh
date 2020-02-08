@@ -51,12 +51,8 @@ class ActivityConfigSet extends MooshCommand
                 $activitylist = array();
                 foreach ($course_mod_list as $mod) {
                     if ( $mod->modname == $modulename ) {
-                        if ( !empty($sectionnumber) ) {
-                            $sectionnum =
-                                get_fast_modinfo($id)->instances[$modulename][$mod->instance]->sectionnum;
-                            if ( $sectionnumber == $sectionnum ) {
+                        if ( !empty($sectionnumber) and $mod->sectionnum == $sectionnumber ) {
                             $activitylist[] = $mod;
-                            }
                         }else{ $activitylist[] = $mod; }
                     }
                 }
