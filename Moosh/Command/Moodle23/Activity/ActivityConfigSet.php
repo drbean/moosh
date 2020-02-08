@@ -35,7 +35,7 @@ class ActivityConfigSet extends MooshCommand
         $value = trim($this->arguments[4]);
 
         $options = $this->expandedOptions;
-        $section = $options['sectionnumber'];
+        $sectionnumber = $options['sectionnumber'];
 
         switch ($this->arguments[0]) {
             case 'activity':
@@ -50,8 +50,12 @@ class ActivityConfigSet extends MooshCommand
                 $activitylist = array();
                 foreach ($course_mod_list as $mod) {
                     if ( $mod->modname == $modulename ) {
-                        if ( !empty($section) and $mod->section == $section ) {
+                        if ( !empty($sectionnumber) ) {
+                            $sectionnum =
+                                get_fast_modinfo($id)->instances[$modulename][$mod->instance]->sectionnum;
+                            if ( $sectionnumber == $sectionnum ) {
                             $activitylist[] = $mod;
+                            }
                         }else{ $activitylist[] = $mod; }
                     }
                 }
