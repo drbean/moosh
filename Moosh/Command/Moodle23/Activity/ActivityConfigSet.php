@@ -15,6 +15,8 @@ class ActivityConfigSet extends MooshCommand
     {
         parent::__construct('config-set', 'activity');
 
+        $this->addOption('s|sectionnumber:=number', 'sectionnumber', null);
+
         $this->addArgument('mode');
         $this->addArgument('id');
         $this->addArgument('module');
@@ -32,6 +34,8 @@ class ActivityConfigSet extends MooshCommand
         $setting = trim($this->arguments[3]);
         $value = trim($this->arguments[4]);
 
+        $options = $this->expandedOptions;
+        $section = $options['sectionnumber'];
 
         switch ($this->arguments[0]) {
             case 'activity':
@@ -45,9 +49,11 @@ class ActivityConfigSet extends MooshCommand
                 $course_mod_list = get_course_mods($id/* courseid */);
                 $activitylist = array();
                 foreach ($course_mod_list as $mod) {
-                   if ( $mod->modname == $modulename ) {
-                       $activitylist[] = $mod;
-                   }
+                    if ( $mod->modname == $modulename ) {
+                        if ( !empty($section) and $mod->section == $section ) {
+                            $activitylist[] = $mod;
+                        }else{ $activitylist[] = $mod; }
+                    }
                 }
                 $succeeded = 0;
                 $failed = 0;
