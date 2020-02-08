@@ -46,7 +46,8 @@ class ActivityConfigSet extends MooshCommand
                 break;
             case 'course':
                 //get all activities in the course
-                $course_mod_list = get_course_mods($id/* courseid */);
+                $course_mod_info = get_fast_modinfo($id/* courseid */)->cms;
+                $course_mod_list = array_values( $course_mod_info );
                 $activitylist = array();
                 foreach ($course_mod_list as $mod) {
                     if ( $mod->modname == $modulename ) {
