@@ -75,6 +75,7 @@ Example 3: set reviewrightanswer to "After quiz closes" for quizzes in section n
 
     moosh activity-config-set -s 2 course 45 quiz reviewrightanswer 65552
 
+
 <span class="anchor" id="admin-login"></span>
 <a class="command-name">admin-login</a>
 ---------------
