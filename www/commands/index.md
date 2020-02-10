@@ -48,7 +48,6 @@ Deletes activity with given module id.
     moosh activity-delete 2
 
 
-<<<<<<< HEAD
 <span class="anchor" id="activity-move"></span>
 <a class="command-name">activity-move</a>
 ---------------
@@ -58,8 +57,6 @@ Moves activity with module id in the first argument to the end of its present se
     moosh activity-move -s 2 4576 4578
 
 
-=======
->>>>>>> 2c3061b4e65639441bdf0fbfc1fa2c5ae0da8303
 <span class="anchor" id="activity-config-set"></span>
 <a class="command-name">activity-config-set</a>
 ---------------
