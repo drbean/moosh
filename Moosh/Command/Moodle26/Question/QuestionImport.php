@@ -101,7 +101,7 @@ class QuestionImport extends MooshCommand
             if (empty($tag[$tag_text]->id)) {
                 print_error("No tag[tag_text] object for tag '" . print_r($tag[$tag_text]) . "' '" . $tag[$tag_text] . "'\n", '');
             }
-            quiz_add_random_questions($quiz, $addonpage, $category_id, $options['random'], true, array($tag[$tag_text]->id));
+            quiz_add_random_questions($quiz, $addonpage, $category_id, $options['random'], false, array($tag[$tag_text]->id));
         }
         else {
             foreach ($qformat->questionids as $addquestion) {
