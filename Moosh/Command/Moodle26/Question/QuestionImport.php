@@ -96,7 +96,7 @@ class QuestionImport extends MooshCommand
                 print_error("No '$tag' tagid for '$tag_text' tag\n", '');
             }
             foreach ($qformat->questionids as $id) {
-                \core_tag_tag::set_item_tags('quiz_tag_correspondence_1', 'question', $id, $quizcontext, array($tag_text));
+                \core_tag_tag::set_item_tags('quiz_tag_correspondence_2', 'question', $id, $quizcontext, array($tag_text));
             }
             if (empty($tag[$tag_text]->id)) {
                 print_error("No tag[tag_text] object for tag '" . print_r($tag[$tag_text]) . "' '" . $tag[$tag_text] . "'\n", '');
