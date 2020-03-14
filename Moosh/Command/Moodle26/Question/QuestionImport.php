@@ -17,7 +17,8 @@ class QuestionImport extends MooshCommand
         parent::__construct('import', 'question');
         $this->addOption('r|random:', 'random number of (tagged) questions from the category', NULL);
         $this->addOption('t|tag:', 'tag on questions from the category', NULL);
-        $this->addOption('c|collection:', 'id of tag collection with tag', NULL);
+        $this->addOption('l|collection:', 'id of tag coLLection with tag', NULL);
+        $this->addOption('m|component:', 'id of quiz tag coMponent', NULL);
         $this->addArgument('questions.xml');
         $this->addArgument('quiz_id');
         $this->addArgument('question_category_id');
@@ -87,6 +88,7 @@ class QuestionImport extends MooshCommand
         if (!empty($options['random'])) {
             $tag_text = $options['tag'];
             $tagcollid = $options['collection'];
+            $tagcomponentid = $options['component'];
             if (empty($tag_text)) {
                 print_error("No tag for choosing {$options['random']} random questions", '');
             }
@@ -96,7 +98,7 @@ class QuestionImport extends MooshCommand
                 print_error("No '$tag' tagid for '$tag_text' tag\n", '');
             }
             foreach ($qformat->questionids as $id) {
-                \core_tag_tag::set_item_tags('quiz_tag_correspondence_2', 'question', $id, $quizcontext, array($tag_text));
+                \core_tag_tag::set_item_tags($tagcomponentid, 'question', $id, $quizcontext, array($tag_text));
             }
             if (empty($tag[$tag_text]->id)) {
                 print_error("No tag[tag_text] object for tag '" . print_r($tag[$tag_text]) . "' '" . $tag[$tag_text] . "'\n", '');
