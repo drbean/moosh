@@ -27,9 +27,9 @@ class ActivityAdd extends MooshCommand
 
         $this->addOption('n|name:', 'activity instance name');
         $this->addOption('s|section:', 'section number', '1');
-        $this->addOption('i|idnumber:', 'idnumber', null);
-        $this->addOption('c|gradecat:', 'gradecategory id', null);
-        $this->addOption('o|options:', 'any options that should be passed for activity creation', null);
+        $this->addOption('i|idnumber', 'idnumber');
+        $this->addOption('c|gradecat', 'gradecategory id');
+        $this->addOption('o|options:', 'any options that should be passed for activity creation', '--timeopen=1');
 
         $this->addArgument('activitytype');
         $this->addArgument('course');
