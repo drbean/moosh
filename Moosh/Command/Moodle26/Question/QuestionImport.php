@@ -15,10 +15,10 @@ class QuestionImport extends MooshCommand
     public function __construct()
     {
         parent::__construct('import', 'question');
-        $this->addOption('r|random:', 'random number of (tagged) questions from the category', NULL);
-        $this->addOption('t|tag:', 'tag on questions from the category', NULL);
-        $this->addOption('l|collection:', 'id of tag coLLection with tag', NULL);
-        $this->addOption('m|component:', 'id of quiz tag coMponent', NULL);
+        $this->addOption('r|random', 'random number of (tagged) questions from the category');
+        $this->addOption('t|tag', 'tag on questions from the category');
+        $this->addOption('l|collection', 'id of tag coLLection with tag');
+        $this->addOption('m|component', 'name of quiz tag coMponent');
         $this->addArgument('questions.xml');
         $this->addArgument('quiz_id');
         $this->addArgument('question_category_id');
