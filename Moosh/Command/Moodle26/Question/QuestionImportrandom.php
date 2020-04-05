@@ -10,7 +10,7 @@ namespace Moosh\Command\Moodle26\Question;
 
 use Moosh\MooshCommand;
 
-class QuestionImport extends MooshCommand
+class QuestionImportrandom extends MooshCommand
 {
     public function __construct()
     {
