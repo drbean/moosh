@@ -15,13 +15,17 @@ class QuestionImportrandom extends MooshCommand
     public function __construct()
     {
         parent::__construct('importrandom', 'question');
-        $this->addOption('r|random', 'random number of (tagged) questions from the category');
-        $this->addOption('t|tag', 'tag on questions from the category');
-        $this->addOption('l|collection', 'id of tag coLLection with tag');
-        $this->addOption('m|component', 'name of quiz tag coMponent');
+        # $this->addOption('r|random', 'random number of (tagged) questions from the category');
+        # $this->addOption('t|tag', 'tag on questions from the category');
+        # $this->addOption('l|collection', 'id of tag coLLection with tag');
+        # $this->addOption('m|component', 'name of quiz tag coMponent');
         $this->addArgument('questions.xml');
         $this->addArgument('quiz_id');
         $this->addArgument('question_category_id');
+        $this->addArgument('random_n_of_questions');
+        $this->addArgument('tag');
+        $this->addArgument('collection');
+        $this->addArgument('component');
     }
 
     public function execute()
@@ -34,13 +38,22 @@ class QuestionImportrandom extends MooshCommand
         require_once($CFG->dirroot . '/lib/questionlib.php');
         require_once($CFG->dirroot . '/mod/quiz/locallib.php');
 
-        $options = $this->expandedOptions;
+        # $options = $this->expandedOptions;
         $arguments = $this->arguments;
         $this->checkFileArg($arguments[0]);
 
         $file = $arguments[0];
         $quiz_id = $arguments[1];
         $category_id = $arguments[2];
+        $random = $arguments[3];
+        $tag_text = $arguments[4];
+        $tagcollid = $arguments[5];
+        $tagcomponentid = $arguments[6];
+
+
+        if ($this->verbose) {
+            echo print_r($arguments) . "\n";
+        }
         $quiz = $DB->get_record('quiz', array('id'=>$quiz_id),'*',MUST_EXIST);
         $course = $DB->get_record('course', array('id'=>$quiz->course),'*',MUST_EXIST);
         $coursecontext = \context_course::instance($course->id);
@@ -85,12 +98,13 @@ class QuestionImportrandom extends MooshCommand
             print_error('cannotimport', '');
         }
         $addonpage = 1;
-        if (!empty($options['random'])) {
-            $tag_text = $options['tag'];
-            $tagcollid = $options['collection'];
-            $tagcomponentid = $options['component'];
+        #if (!empty($options['random'])) {
+        #    $tag_text = $options['tag'];
+        #    $tagcollid = $options['collection'];
+        #    $tagcomponentid = $options['component'];
             if (empty($tag_text)) {
-                print_error("No tag for choosing {$options['random']} random questions", '');
+                # print_error("No tag for choosing {$options['random']} random questions", '');
+                print_error("No tag for choosing $random random questions", '');
             }
 
             $tag = \core_tag_tag::create_if_missing($tagcollid, array($tag_text));
@@ -103,14 +117,15 @@ class QuestionImportrandom extends MooshCommand
             if (empty($tag[$tag_text]->id)) {
                 print_error("No tag[tag_text] object for tag '" . print_r($tag[$tag_text]) . "' '" . $tag[$tag_text] . "'\n", '');
             }
-            quiz_add_random_questions($quiz, $addonpage, $category_id, $options['random'], false, array($tag[$tag_text]->id));
-        }
-        else {
-            foreach ($qformat->questionids as $addquestion) {
-                quiz_require_question_use($addquestion);
-                quiz_add_quiz_question($addquestion, $quiz, $addonpage);
-            }
-        }
+            # quiz_add_random_questions($quiz, $addonpage, $category_id, $options['random'], false, array($tag[$tag_text]->id));
+            quiz_add_random_questions($quiz, $addonpage, $category_id, $random, false, array($tag[$tag_text]->id));
+        #}
+        #else {
+        #    foreach ($qformat->questionids as $addquestion) {
+        #        quiz_require_question_use($addquestion);
+        #        quiz_add_quiz_question($addquestion, $quiz, $addonpage);
+        #    }
+        #}
         quiz_delete_previews($quiz);
         quiz_update_sumgrades($quiz);
     }
