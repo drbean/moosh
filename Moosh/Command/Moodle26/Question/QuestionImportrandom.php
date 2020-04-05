@@ -14,7 +14,7 @@ class QuestionImportrandom extends MooshCommand
 {
     public function __construct()
     {
-        parent::__construct('import', 'question');
+        parent::__construct('importrandom', 'question');
         $this->addOption('r|random', 'random number of (tagged) questions from the category');
         $this->addOption('t|tag', 'tag on questions from the category');
         $this->addOption('l|collection', 'id of tag coLLection with tag');
