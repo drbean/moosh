@@ -40,9 +40,7 @@ Example 6. Add scorm "scorm1" with description "my intro ABC" and forcenewattemp
 
 Example 7. Add quiz named "moosh test quiz" with intro set to "Here is your quiz", and activity completion options enabled to course 33
 
-    moosh activity-add 'moosh test quiz' -o="--intro=\"Here is your quiz.\  --completion=2 --completionview=1 --complet
-ionusegrade=1 --completionpass=1" quiz 33
-
+    moosh activity-add -n 'moosh test quiz' -o="--intro=Here is your quiz.  --completion=2 --completionview=1 --completionusegrade=1 --completionpass=1" quiz 33
 
 activity-delete
 ---------------
@@ -228,6 +226,16 @@ Example 1. Disable External database (db) auth plugin.
 Example 2. Move up Email-based self-registration (email).
 
     moosh auth-manage up email 
+
+backup-info
+-----------
+
+Provides some basic information about Moodle backup file.
+The command works by extracting files like users.xml, gradebook.xml, course/logs.xml and getting the information from them 
+
+Example 1. Display basic stats about backup-moodle2-course-2-course1-20200405-1947.mbz file.
+
+    moosh backup-info backup-moodle2-course-2-course1-20200405-1947.mbz
 
 block-add
 ---------------
@@ -1238,6 +1246,16 @@ Show information about plugin in current directory.
 Example 1:
 
     moosh info
+
+info-context
+---------------
+
+Show information about given context ID - as in mdl_context.id.
+
+Example 1: Show information about Moodle context 123.
+
+    moosh info-context 123
+
 
 info-plugins
 ---------------
