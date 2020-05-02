@@ -857,6 +857,22 @@ List all events available in current Moodle installation.
 
     moosh event-list
 
+file-check
+------------
+
+For each file entry in the database, check that the file exists in moodledata (in filedir).
+With --stop <number> stop the search after number of missing files found. 
+
+Example:
+
+    moosh file-check -s 1
+    
+Result:
+
+    Missing /opt/data/filedir/5f/8e/5f8e911d0da441e36f47c5c46f4393269211ca56
+    assignfeedback_editpdf / stamps "smile.png" 2019-08-25 15:43 / 2019-08-25 15:43
+    Found 1 missing files, not searching anymore. Set -s 0 option to disable the limit.
+
 
 file-datacheck
 --------------
@@ -869,7 +885,8 @@ Go through all files in Moodle data and check them for corruption. The check is 
 file-dbcheck
 ------------
 
-Check that all files recorder in the DB do exist in Moodle data directory.
+For each file in moodledata, check that there is an entry in the Moodle DB.
+This command will find any extra files in "filedir".
 
     moosh file-dbcheck
 
@@ -896,6 +913,22 @@ Example 4: Remove all automated backups and reclaim the space
 
     moosh file-list -i 'component="backup" AND filearea="automated"' | moosh file-delete -s
     moosh file-delete --flush
+
+file-hash-delete
+----------------
+
+Delete files that match given hash from the dababase (mdl_files).
+
+Example:
+
+    moosh file-hash-delete 5f8e911d0da441e36f47c5c46f4393269211ca56
+    
+Resuls:
+
+    There is: 1 results of this hash. 
+    Successfully deleted files.
+    File ID: 1, contenthash: 5f8e911d0da441e36f47c5c46f4393269211ca56, itemid: 0, component: assignfeedback_editpdf, filearea: stamps, filename: smile.png
+
 
 file-list
 ---------
@@ -1338,6 +1371,31 @@ Example 1: Show all plugin types.
 
     moosh info-plugins
 
+lang-compare
+------------
+
+Compare 2 Moodle language files and lists the difference in strings (keys) between them.
+It does not compare the translations (values).
+
+Example: 
+
+    moosh.php lang-compare book.php book2.php
+    
+Result:
+
+    Comparing book.php and book2.php. Summary:
+    Number of strings in book.php: 72
+    Number of strings in book2.php: 72
+    Number of strings missing in book2.php: 1
+    Number of strings missing in book.php: 1
+
+    List of language strings that exist in book.php but are not present in book2.php
+    pluginname
+
+    List of language strings that exist in book2.php but are not present in book.php
+    pluginname2
+
+
 languages-update
 ----------------
 
@@ -1681,6 +1739,16 @@ Example 2: specify a target theme name if you want to transfer settings to a dif
 
     moosh theme-settings-import --targettheme boostfork boost_settings_1558197087.tar.gz
 
+top
+---
+
+Display the latest entries from the log table mdl_logstore_standard_log.
+If combined with "watch" command, it will imitate the poor man's "top" utility.
+
+Example:
+
+    watch moosh top
+ 
 user-assign-system-role
 -----------------------
 
@@ -1693,19 +1761,6 @@ Example 1: assign "manager" role for "testuser"
 Example 1: assign "coursecreator" role for "testuser2"
     
     moosh user-assign-system-role testuser2 coursecreator
-    
-user-unassign-system-role
--------------------------
-
-Unassign system role to user.
-
-Example 1: unassign "manager" role for "testuser"
-    
-    moosh user-unassign-system-role testuser manager
-    
-Example 1: unassign "coursecreator" role for "testuser2"
-    
-    moosh user-unassign-system-role testuser2 coursecreator
 
 user-create
 -----------
@@ -1797,7 +1852,24 @@ Example 4: list teachers enrolled in course id 2 that never accessed that course
 
     moosh user-list --course 2 --course-role editingteacher --course-inactive
 
+user-login
+----------
 
+Logs given user in and return the session cookie.
+This can then be used in another HTTP call to impersonate that user. 
+It is important that you run moosh as correct www user.
+If you run it as another user than your web server, then the server may not be able 
+to read session file and you will see the error: 
+
+    error/An error occurred whilst communicating with the server 
+
+Example: login as student1 and fetch his dashboard page.
+
+    $ moosh.php user-login student1
+    MoodleSession:h6v2l11946ne16tejogs55vhcn
+    $ curl -b 'MoodleSession=h6v2l11946ne16tejogs55vhcn' http://localhost/vanilla37/my/index.php
+    
+    
 user-mod
 --------
 
@@ -1826,6 +1898,38 @@ Example 5: set user as global super user
 Example 6: change admin's password while ignoring password's policy
 
     moosh user-mod --ignorepolicy --password weakpassword admin
+
+user-unassign-system-role
+-------------------------
+
+Unassign system role to user.
+
+Example 1: unassign "manager" role for "testuser"
+    
+    moosh user-unassign-system-role testuser manager
+    
+Example 1: unassign "coursecreator" role for "testuser2"
+    
+    moosh user-unassign-system-role testuser2 coursecreator
+
+userprofilefields-export
+------------------------
+
+Export the definition of the defined user profile fields to CSV file
+named by default "user_profile_fields.csv".
+
+Example:
+
+    moosh userprofilefields-export
+
+userprofilefields-import
+------------------------
+
+Import user profile fields defined in given CSV file.
+
+Example: import user profie fields from user_profile_fields.csv
+ 
+    moosh userprofilefields-import user_profile_fields.csv
 
 webservice-call
 ---------------

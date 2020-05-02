@@ -1013,6 +1013,24 @@ moosh dev-versionbump
 <pre><code>moosh event-list
 </code></pre>
 
+<a name="file-check"></a>
+<h2>file-check</h2>
+
+<p>For each file entry in the database, check that the file exists in moodledata (in filedir).
+With --stop <number> stop the search after number of missing files found.</p>
+
+<p>Example:</p>
+
+<pre><code>moosh file-check -s 1
+</code></pre>
+
+<p>Result:</p>
+
+<pre><code>Missing /opt/data/filedir/5f/8e/5f8e911d0da441e36f47c5c46f4393269211ca56
+assignfeedback_editpdf / stamps "smile.png" 2019-08-25 15:43 / 2019-08-25 15:43
+Found 1 missing files, not searching anymore. Set -s 0 option to disable the limit.
+</code></pre>
+
 <a name="file-datacheck"></a>
 <h2>file-datacheck</h2>
 
@@ -1024,7 +1042,8 @@ moosh dev-versionbump
 <a name="file-dbcheck"></a>
 <h2>file-dbcheck</h2>
 
-<p>Check that all files recorder in the DB do exist in Moodle data directory.</p>
+<p>For each file in moodledata, check that there is an entry in the Moodle DB.
+This command will find any extra files in "filedir".</p>
 
 <pre><code>moosh file-dbcheck
 </code></pre>
@@ -1054,6 +1073,23 @@ moosh dev-versionbump
 
 <pre><code>moosh file-list -i 'component="backup" AND filearea="automated"' | moosh file-delete -s
 moosh file-delete --flush
+</code></pre>
+
+<a name="file-hash-delete"></a>
+<h2>file-hash-delete</h2>
+
+<p>Delete files that match given hash from the dababase (mdl_files).</p>
+
+<p>Example:</p>
+
+<pre><code>moosh file-hash-delete 5f8e911d0da441e36f47c5c46f4393269211ca56
+</code></pre>
+
+<p>Resuls:</p>
+
+<pre><code>There is: 1 results of this hash. 
+Successfully deleted files.
+File ID: 1, contenthash: 5f8e911d0da441e36f47c5c46f4393269211ca56, itemid: 0, component: assignfeedback_editpdf, filearea: stamps, filename: smile.png
 </code></pre>
 
 <a name="file-list"></a>
@@ -1552,6 +1588,32 @@ necessary.</p>
 <pre><code>moosh info-plugins
 </code></pre>
 
+<a name="lang-compare"></a>
+<h2>lang-compare</h2>
+
+<p>Compare 2 Moodle language files and lists the difference in strings (keys) between them.
+It does not compare the translations (values).</p>
+
+<p>Example:</p>
+
+<pre><code>moosh.php lang-compare book.php book2.php
+</code></pre>
+
+<p>Result:</p>
+
+<pre><code>Comparing book.php and book2.php. Summary:
+Number of strings in book.php: 72
+Number of strings in book2.php: 72
+Number of strings missing in book2.php: 1
+Number of strings missing in book.php: 1
+
+List of language strings that exist in book.php but are not present in book2.php
+pluginname
+
+List of language strings that exist in book2.php but are not present in book.php
+pluginname2
+</code></pre>
+
 <a name="languages-update"></a>
 <h2>languages-update</h2>
 
@@ -1925,6 +1987,17 @@ and add "-on" or "-off" to the caontext level name to turn it on or off.</p>
 <pre><code>moosh theme-settings-import --targettheme boostfork boost_settings_1558197087.tar.gz
 </code></pre>
 
+<a name="top"></a>
+<h2>top</h2>
+
+<p>Display the latest entries from the log table mdl_logstore_standard_log.
+If combined with "watch" command, it will imitate the poor man's "top" utility.</p>
+
+<p>Example:</p>
+
+<pre><code>watch moosh top
+</code></pre>
+
 <a name="user-assign-system-role"></a>
 <h2>user-assign-system-role</h2>
 
@@ -1938,21 +2011,6 @@ and add "-on" or "-off" to the caontext level name to turn it on or off.</p>
 <p>Example 1: assign "coursecreator" role for "testuser2"</p>
 
 <pre><code>moosh user-assign-system-role testuser2 coursecreator
-</code></pre>
-
-<a name="user-unassign-system-role"></a>
-<h2>user-unassign-system-role</h2>
-
-<p>Unassign system role to user.</p>
-
-<p>Example 1: unassign "manager" role for "testuser"</p>
-
-<pre><code>moosh user-unassign-system-role testuser manager
-</code></pre>
-
-<p>Example 1: unassign "coursecreator" role for "testuser2"</p>
-
-<pre><code>moosh user-unassign-system-role testuser2 coursecreator
 </code></pre>
 
 <a name="user-create"></a>
@@ -2059,6 +2117,25 @@ Image filename can be mapped to user ID, idnumber or username database field. Su
 <pre><code>moosh user-list --course 2 --course-role editingteacher --course-inactive
 </code></pre>
 
+<a name="user-login"></a>
+<h2>user-login</h2>
+
+<p>Logs given user in and return the session cookie.
+This can then be used in another HTTP call to impersonate that user.
+It is important that you run moosh as correct www user.
+If you run it as another user than your web server, then the server may not be able
+to read session file and you will see the error:</p>
+
+<pre><code>error/An error occurred whilst communicating with the server 
+</code></pre>
+
+<p>Example: login as student1 and fetch his dashboard page.</p>
+
+<pre><code>$ moosh.php user-login student1
+MoodleSession:h6v2l11946ne16tejogs55vhcn
+$ curl -b 'MoodleSession=h6v2l11946ne16tejogs55vhcn' http://localhost/vanilla37/my/index.php
+</code></pre>
+
 <a name="user-mod"></a>
 <h2>user-mod</h2>
 
@@ -2092,6 +2169,42 @@ Image filename can be mapped to user ID, idnumber or username database field. Su
 <p>Example 6: change admin's password while ignoring password's policy</p>
 
 <pre><code>moosh user-mod --ignorepolicy --password weakpassword admin
+</code></pre>
+
+<a name="user-unassign-system-role"></a>
+<h2>user-unassign-system-role</h2>
+
+<p>Unassign system role to user.</p>
+
+<p>Example 1: unassign "manager" role for "testuser"</p>
+
+<pre><code>moosh user-unassign-system-role testuser manager
+</code></pre>
+
+<p>Example 1: unassign "coursecreator" role for "testuser2"</p>
+
+<pre><code>moosh user-unassign-system-role testuser2 coursecreator
+</code></pre>
+
+<a name="userprofilefields-export"></a>
+<h2>userprofilefields-export</h2>
+
+<p>Export the definition of the defined user profile fields to CSV file
+named by default "user_profile_fields.csv".</p>
+
+<p>Example:</p>
+
+<pre><code>moosh userprofilefields-export
+</code></pre>
+
+<a name="userprofilefields-import"></a>
+<h2>userprofilefields-import</h2>
+
+<p>Import user profile fields defined in given CSV file.</p>
+
+<p>Example: import user profie fields from user_profile_fields.csv</p>
+
+<pre><code>moosh userprofilefields-import user_profile_fields.csv
 </code></pre>
 
 <a name="webservice-call"></a>
