@@ -88,7 +88,7 @@ class QuestionImport extends MooshCommand
         if (!empty($options['random'])) {
             $tag_text = $options['tag'];
             $tagcollid = $options['collection'];
-            $tagcomponentid = $options['component'];
+            $tagcomponent = $options['component'];
             if (empty($tag_text)) {
                 print_error("No tag for choosing {$options['random']} random questions", '');
             }
@@ -98,7 +98,7 @@ class QuestionImport extends MooshCommand
                 print_error("No '$tag' tagid for '$tag_text' tag\n", '');
             }
             foreach ($qformat->questionids as $id) {
-                \core_tag_tag::set_item_tags($tagcomponentid, 'question', $id, $quizcontext, array($tag_text));
+                \core_tag_tag::set_item_tags($tagcomponent, 'question', $id, $quizcontext, array($tag_text));
             }
             if (empty($tag[$tag_text]->id)) {
                 print_error("No tag[tag_text] object for tag '" . print_r($tag[$tag_text]) . "' '" . $tag[$tag_text] . "'\n", '');
