@@ -26,19 +26,29 @@ class SectionConfigSet extends MooshCommand
 
         parent::__construct('config-set', 'section');
 
+        $this->addOption('s|sectionnumber:=number', 'sectionnumber', null);
+
         $this->addArgument('mode');
         $this->addArgument('courseid');
-        $this->addArgument('sectionno');
         $this->addArgument('setting');
         $this->addArgument('value');
     }
 
     public function execute()
     {
-        $sectionno = trim($this->arguments[2]);
+        global $DB, $CFG;
+
+        include_once $CFG->dirroot . '/course/lib.php';
+        include_once $CFG->libdir . '/modinfolib.php';
+
         $setting = trim($this->arguments[3]);
         $value = trim($this->arguments[4]);
 
+        $options = $this->expandedOptions;
+        $sectionno = $options['sectionnumber'];
+
+        $course = get_course_modinfo();
+        $sections = $course->get_section_info_all();
 
         switch ($this->arguments[0]) {
     case 'course':
@@ -74,9 +84,9 @@ class SectionConfigSet extends MooshCommand
         
         global $DB, $CFG;
         
-        require_once($CFG->dirroot . '/course/lib.php');
+        include_once $CFG->dirroot . '/course/lib.php';
 
-        $section = $DB->get_record('course_sections', array("course"=>$courseid, "section"=>$sectionno),'*',MUST_EXIST);
+        $section = $DB->get_record('course_sections', array("course"=>$courseid, "section"=>$sectionno), '*', MUST_EXIST);
         $data = array( $setting => $value );
         if ( course_update_section( $courseid,$section,$data ) ) {
             echo "OK - Set $setting='$value' (courseid={$courseid})\n";
