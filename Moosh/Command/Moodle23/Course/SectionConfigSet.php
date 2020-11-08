@@ -29,58 +29,75 @@ class SectionConfigSet extends MooshCommand
         $this->addOption('s|sectionnumber:=number', 'sectionnumber', null);
 
         $this->addArgument('mode');
-        $this->addArgument('courseid');
+        $this->addArgument('id');
         $this->addArgument('setting');
         $this->addArgument('value');
     }
 
     public function execute()
     {
-        global $DB, $CFG;
+        global $CFG;
 
         include_once $CFG->dirroot . '/course/lib.php';
         include_once $CFG->libdir . '/modinfolib.php';
 
-        $setting = trim($this->arguments[3]);
-        $value = trim($this->arguments[4]);
+        $setting = trim($this->arguments[2]);
+        $value = trim($this->arguments[3]);
 
         $options = $this->expandedOptions;
         $sectionno = $options['sectionnumber'];
 
-        $course = get_course_modinfo();
-        $sections = $course->get_section_info_all();
 
         switch ($this->arguments[0]) {
-    case 'course':
-            if(!self::setSectionSetting($this->arguments[1]/* courseid */,$sectionno,$setting,$value)){
-                // the setting was not applied, exit with non-zero exit code
-                cli_error('');
-        }
+        case 'course':
+            if (!empty($sectionno)) {
+                if (!self::_setSectionSetting($this->arguments[1]/* courseid */, $sectionno, $setting, $value)) {
+                    // the setting was not applied, exit with non-zero exit code
+                    cli_error('');
+                }
+            } else {
+                $course = get_fast_modinfo($this->arguments[1]/* courseid */);
+                $sections = $course->get_section_info_all();
+                foreach ($sections as $sectionno => $section) {
+                    if (!self::_setSectionSetting($this->arguments[1]/* courseid */, $sectionno, $setting, $value)) {
+                        cli_error('');
+                    }
+                }
+            }
             break;
         case 'category':
                 //get all courses in category (recursive)
-                $courselist = get_courses($this->arguments[1]/* categoryid */,'','c.id');
+                $courselist = get_courses($this->arguments[1]/* categoryid */, '', 'c.id');
                 $succeeded = 0;
                 $failed = 0;
                 foreach ($courselist as $course) {
-                    if(self::setSectionSetting($course->id,$sectionno,$setting,$value)){
-                        $succeeded++;
-                    }else{
-                        $failed++;
+                if (!empty($sectionno)) {
+                    if (!self::_setSectionSetting($course->id, $sectionno, $setting, $value)) {
+                        // the setting was not applied, exit with non-zero exit code
+                        cli_error('');
+                    }
+            }   else {
+                    $course_info = get_fast_modinfo($course->id);
+                    $sections = $course_info->get_section_info_all();
+                    foreach ($sections as $section) {
+                       if (self::_setSectionSetting($course->id, $section->section, $setting, $value)) {
+                           $succeeded++;
+                       }else{
+                           $failed++;
+                       }
                     }
                 }
                 if($failed == 0){
                     echo "OK - successfully modified $succeeded courses\n";
                 }else{
                     echo "WARNING - failed to mofify $failed courses (successfully modified $succeeded)\n";
-
+                }
                 break;
+            }
         }
-
-    }
     }
 
-    private function setSectionSetting($courseid,$sectionno,$setting,$value) {
+    private function _setSectionSetting($courseid, $sectionno, $setting, $value) {
         
         global $DB, $CFG;
         
@@ -88,7 +105,7 @@ class SectionConfigSet extends MooshCommand
 
         $section = $DB->get_record('course_sections', array("course"=>$courseid, "section"=>$sectionno), '*', MUST_EXIST);
         $data = array( $setting => $value );
-        if ( course_update_section( $courseid,$section,$data ) ) {
+        if ( course_update_section( $courseid, $section, $data ) ) {
             echo "OK - Set $setting='$value' (courseid={$courseid})\n";
             return true;
         } else {
