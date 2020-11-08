@@ -1706,19 +1706,19 @@ Example 2: Prevent "manager" role to be set on course level
 section-config-set
 -------------------
 
-Follows the course-config-set pattern, updating a field in the Moodle {course_sections} table, for all the course sections (or optionally a single section) in one course, or one course category.
+Follows the course-config-set pattern, updating a field in the Moodle {course_sections} table, for all the course sections (or optionally a single section), in all the courses in a course category, or alternatively in one course.
 
-Example 1: set the name of a single URL resource with instance(!) id=151
+Example 1: set the name of the second section in course with id 45 to "Describe a picture"
 
-    moosh activity-config-set activity 151 url name "Examinee handbook"
+    moosh section-config-set -s 2 course 45 name "Describe a picture"
 
-Example 2: set introformat to markdown in all forums in a course with id=41
+Example 2: set summaryformat to markdown in all sections in courses in the Miscellaneous category
 
-    moosh activity-config-set course 41 forum introformat 4
+    moosh section-config-set category 1 summaryformat 4
 
-Example 3: set reviewrightanswer to "After quiz closes" for quizzes in section number 2 in a course with id=45
+Example 3: Hide all sections in course with id 45
 
-    moosh activity-config-set -s 2 course 45 quiz reviewrightanswer 65552
+    moosh section-config-set course 45 visible 0
 
 sql-cli
 -------
