@@ -36,7 +36,7 @@ class SectionConfigSet extends MooshCommand
 
     public function execute()
     {
-        global $CFG;
+        global $DB, $CFG;
 
         include_once $CFG->dirroot . '/course/lib.php';
         include_once $CFG->libdir . '/modinfolib.php';
@@ -51,7 +51,7 @@ class SectionConfigSet extends MooshCommand
         switch ($this->arguments[0]) {
         case 'course':
             if (!empty($sectionno)) {
-                if (!self::_setSectionSetting($this->arguments[1]/* courseid */, $sectionno, $setting, $value)) {
+                if (!$this->_setSectionSetting($this->arguments[1]/* courseid */, $sectionno, $setting, $value)) {
                     // the setting was not applied, exit with non-zero exit code
                     cli_error('');
                 }
@@ -59,7 +59,7 @@ class SectionConfigSet extends MooshCommand
                 $course = get_fast_modinfo($this->arguments[1]/* courseid */);
                 $sections = $course->get_section_info_all();
                 foreach ($sections as $sectionno => $section) {
-                    if (!self::_setSectionSetting($this->arguments[1]/* courseid */, $sectionno, $setting, $value)) {
+                    if (!$this->_setSectionSetting($this->arguments[1]/* courseid */, $sectionno, $setting, $value)) {
                         cli_error('');
                     }
                 }
@@ -70,32 +70,32 @@ class SectionConfigSet extends MooshCommand
             $courselist = get_courses($this->arguments[1]/* categoryid */, '', 'c.id');
             $succeeded = 0;
             $failed = 0;
+            $course_count = 0;
             foreach ($courselist as $course) {
                 if (!empty($sectionno)) {
-                    if (!self::_setSectionSetting($course->id, $sectionno, $setting, $value)) {
+                    if (!$this->_setSectionSetting($course->id, $sectionno, $setting, $value)) {
                         // the setting was not applied, exit with non-zero exit code
                         cli_error('');
                     }
-                }
-                else {
+                } else {
                     $course_info = get_fast_modinfo($course->id);
                     $sections = $course_info->get_section_info_all();
                     foreach ($sections as $section) {
-                        _setSectionSetting($course->id, $section->section, $setting, $value);
-                        $new_value = $DB->get_field('{course_sections}', array('id'=>$activityid), $setting, $value);
-                        if ( $value == $new_value ) {
+                        $this->_setSectionSetting($course->id, $section->section, $setting, $value);
+                        $new_value = $DB->get_field('course_sections', $setting, array('course'=>$course->id, "section"=>$section->section), $setting, $value);
+                        if ($value == $new_value) {
                             $succeeded++;
-                        }
-                        else{
+                        } else {
                             $failed++;
                         }
                     }
                 }
+                $course_count++;
             }
-            if($failed == 0){
-                echo "OK - successfully modified $succeeded courses\n";
-            }else{
-                echo "WARNING - failed to mofify $failed courses (successfully modified $succeeded)\n";
+            if ($failed == 0) {
+                echo "OK - successfully modified total $succeeded sections in $course_count courses\n";
+            } else {
+                echo "WARNING - failed to modify total $failed courses (successfully modified $succeeded) in $course_count courses\n";
             }
             break;
         }
@@ -109,7 +109,9 @@ class SectionConfigSet extends MooshCommand
 
         $section = $DB->get_record('course_sections', array("course"=>$courseid, "section"=>$sectionno), '*', MUST_EXIST);
         $data = array( $setting => $value );
-        if ( course_update_section( $courseid, $section, $data ) ) {
+        course_update_section($courseid, $section, $data);
+        $new_value = $DB->get_field('course_sections', $setting, array('course'=>$courseid, "section"=>$sectionno), $setting, $value);
+        if ($value == $new_value) {
             echo "OK - Set $setting='$value' (courseid={$courseid})\n";
             return true;
         } else {
