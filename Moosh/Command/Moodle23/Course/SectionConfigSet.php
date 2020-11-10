@@ -50,7 +50,7 @@ class SectionConfigSet extends MooshCommand
 
         switch ($this->arguments[0]) {
         case 'course':
-            if (!empty($sectionno)) {
+            if (isset($sectionno)) {
                 if (!$this->_setSectionSetting($this->arguments[1]/* courseid */, $sectionno, $setting, $value)) {
                     // the setting was not applied, exit with non-zero exit code
                     cli_error('');
@@ -72,7 +72,7 @@ class SectionConfigSet extends MooshCommand
             $failed = 0;
             $course_count = 0;
             foreach ($courselist as $course) {
-                if (!empty($sectionno)) {
+                if (isset($sectionno)) {
                     if (!$this->_setSectionSetting($course->id, $sectionno, $setting, $value)) {
                         // the setting was not applied, exit with non-zero exit code
                         cli_error('');
