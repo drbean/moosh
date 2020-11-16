@@ -17,7 +17,8 @@ use Moosh\MooshCommand;
  * @package   core_dml
  * @copyright 2012 onwards Tomasz Muras
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @link      http://docs.moodle.org/dev/DML_functions
+ * @link      https://docs.moodle.org/dev/Course_formats#Course_sections
+ *
  */
 class SectionConfigSet extends MooshCommand
 {
