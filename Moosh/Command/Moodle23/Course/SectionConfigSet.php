@@ -14,7 +14,7 @@ use Moosh\MooshCommand;
 /**
  * Sub class representing a moosh command.
  *
- * @package   core_dml
+ * @package   core_course
  * @copyright 2012 onwards Tomasz Muras
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @link      https://docs.moodle.org/dev/Course_formats#Course_sections
