@@ -82,8 +82,14 @@ class SectionConfigSet extends MooshCommand
                     $course_info = get_fast_modinfo($course->id);
                     $sections = $course_info->get_section_info_all();
                     foreach ($sections as $section) {
-                        $this->_setSectionSetting($course->id, $section->section, $setting, $value);
-                        $new_value = $DB->get_field('course_sections', $setting, array('course'=>$course->id, "section"=>$section->section), $setting, $value);
+                        $this->_setSectionSetting(
+                            $course->id, $section->section, $setting, $value
+                        );
+                        $new_value = $DB->get_field(
+                            'course_sections', $setting,
+                            array('course'=>$course->id, "section"=>$section->section),
+                            $setting, $value
+                        );
                         if ($value == $new_value) {
                             $succeeded++;
                         } else {
@@ -108,10 +114,17 @@ class SectionConfigSet extends MooshCommand
         
         include_once $CFG->dirroot . '/course/lib.php';
 
-        $section = $DB->get_record('course_sections', array("course"=>$courseid, "section"=>$sectionno), '*', MUST_EXIST);
+        $section = $DB->get_record(
+            'course_sections', array("course"=>$courseid, "section"=>$sectionno),
+            '*', MUST_EXIST
+        );
         $data = array( $setting => $value );
         course_update_section($courseid, $section, $data);
-        $new_value = $DB->get_field('course_sections', $setting, array('course'=>$courseid, "section"=>$sectionno), $setting, $value);
+        $new_value = $DB->get_field(
+            'course_sections', $setting,
+            array('course'=>$courseid, "section"=>$sectionno),
+            $setting, $value
+        );
         if ($value == $new_value) {
             echo "OK - Set $setting='$value' (courseid={$courseid})\n";
             return true;
